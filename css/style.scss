@@ -1,0 +1,15 @@
+$theme-colors: (
+        "highlight": #00ff72,
+        "white": #FFF,
+        "darkblue": #00002a,
+        "pink": #ffbcbe,
+        "danger": #FF0000,
+        "red": #dc3545
+);
+
+$font-family-base: "MuktaMalar", Inter, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+
+@import "src/bootstrap/scss/bootstrap";
+@import "src/logo";
+@import "src/bs-like";
+@import "src/general";

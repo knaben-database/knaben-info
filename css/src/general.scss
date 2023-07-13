@@ -1,0 +1,15 @@
+::selection {
+  background: map-get($theme-colors, "highlight");
+  color: #fff;
+}
+
+@font-face {
+  font-family: "MuktaMalar";
+  src: url("/fonts/MuktaMalar-Regular.woff2");
+}
+
+body {
+  /*background-color: map-get($theme-colors, "darkblue");*/
+  background: linear-gradient(map-get($theme-colors, "pink"), map-get($theme-colors, "darkblue"));
+  min-height: 100vh;
+}

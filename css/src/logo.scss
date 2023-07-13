@@ -1,0 +1,154 @@
+@import "include/animation";
+
+.css-logo {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+
+  > .outer-ring {
+    height: 94%;
+    width: 94%;
+    top: 3%;
+    left: 3%;
+    position: absolute;
+    transform: rotate(220deg);
+    transition-duration: 8s;
+    @include keyframes(fade1){
+      0%{
+        transform: rotate(220deg);
+      }
+      100%{
+        transform: rotate(580deg);
+      }
+    }
+    @include animate(fade1, 23s, linear, infinite);
+    > .ring {
+      background: radial-gradient(ellipse at center, rgba(0,0,0,0) 68%, map-get($theme-colors, "darkblue") 68%);
+    }
+    > .planet {
+      top: -3%;
+      height: 8%;
+      width: 8%;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+  }
+
+  > .middle-ring {
+    height: 80%;
+    width: 80%;
+    top: 10%;
+    left: 10%;
+    position: absolute;
+    @include keyframes(fade2){
+      0%{
+        transform: rotate(-40deg);
+      }
+      100%{
+        transform: rotate(320deg);
+      }
+    }
+    @include animate(fade2, 16s, linear, infinite);
+    > .ring {
+      background: radial-gradient(ellipse at center, rgba(0,0,0,0) 67.5%, map-get($theme-colors, "darkblue") 67.5%);
+    }
+    > .planet {
+      top: -2%;
+      height: 6.5%;
+      width: 6.5%;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+  }
+
+  > .inner-ring {
+    height: 64%;
+    width: 64%;
+    top: 18%;
+    left: 18%;
+    position: absolute;
+    @include keyframes(fade3){
+      0%{
+        transform: rotate(20deg);
+      }
+      100%{
+        transform: rotate(380deg);
+      }
+    }
+    @include animate(fade3, 10s, linear, infinite);
+    > .ring {
+      background: radial-gradient(ellipse at center, rgba(0,0,0,0) 67%, map-get($theme-colors, "darkblue") 67%);
+    }
+    > .planet {
+      top: -5%;
+      height: 12%;
+      width: 12%;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+  }
+
+  .ring {
+    height: 100%;
+    width: 100%;
+    border-radius: 50%;
+  }
+
+  > .ball {
+    height: 40%;
+    width: 40%;
+    top: 30%;
+    left: 30%;
+    border-radius: 50%;
+    position: absolute;
+    background-color: map-get($theme-colors, "darkblue");
+    overflow: hidden;
+    > .cores {
+      transition-duration: 16s;
+      width: 400%;
+      height: 100%;
+      position: absolute;
+      left: -250%;
+      top: 50%;
+      > .core1 {
+        background-color: map-get($theme-colors, "highlight");
+        border-radius: 50%;
+        left: 0;
+        position: absolute;
+        height: 100%;
+        width: 25%;
+      }
+      > .core2 {
+        background-color: map-get($theme-colors, "highlight");
+        border-radius: 50%;
+        right: 0;
+        position: absolute;
+        height: 100%;
+        width: 25%;
+      }
+    }
+  }
+
+  .planet {
+    position: absolute;
+    border-radius: 50%;
+    background-color: map-get($theme-colors, "darkblue");
+    > .planet-core {
+      position: absolute;
+      border-radius: 50%;
+      background-color: map-get($theme-colors, "pink");
+      height: 50%;
+      width: 50%;
+      left: 25%;
+      top: 25%;
+    }
+  }
+}
+
+.css-logo:hover {
+  .ball {
+     .cores {
+      left: 50%;
+    }
+  }
+}
