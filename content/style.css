@@ -1,0 +1,487 @@
+
+body{
+	background: linear-gradient(#ffbcbe, #00002a);
+	/*background-image:none;*/ /*url('/content/ANGLERFISH.png');*/
+	background-position: right;
+    background-repeat: no-repeat;
+    /*background-attachment: fixed;*/
+    font-family: Proxima Nova,Helvetica,Arial,sans-serif;
+    margin: 0;
+
+}
+img{
+	user-select: none;
+	user-drag: none;
+	-moz-user-select: none;
+	-webkit-user-drag: none;
+	-webkit-user-select: none;
+}
+button {
+	-webkit-transition-duration: 0.4s; /* Safari */
+    transition-duration: 0.4s;
+    color: #ffbcbe;
+    width:100%;
+    padding: 8px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 20px;
+    margin-top: 15px;
+    border:none;
+    /*background-color: rgba(25,30,34,0.67);*/
+    background-color: rgba(0,0,0,0);
+    border-width: thick;
+    cursor:pointer;
+}
+button:hover {
+    /*background-color: #00ff72;*/
+    color: #ff9089;
+    /*font-size:150%;*/
+}
+li#flacmenuli {
+	display: inline;
+	padding: 5px;
+	color: #d0dce4;
+	float: left;
+	max-width: 800px;
+
+}
+ul {
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+	overflow: hidden;
+	background-color: rgba(25,30,34,.67);
+}
+li#flacmenuli a {
+	display: block;
+	color: white;
+	text-align: center;
+	font-size: x-large;
+	padding: 28px 32px;
+	text-decoration: none;
+}
+
+li#flacmenuli a:hover {
+		background-color: #00ff72;
+}
+#menudiv{
+	margin-left: auto;
+	margin-right: auto;
+	height:96px;
+	width:100%;
+	position: fixed;
+	background-color: rgba(25,30,34,0.67);
+}
+
+#list{
+    /*background-color:rgba(25,30,34,0.67);*/
+    color:white;
+    margin-left: auto;
+    margin-right: auto;
+    width: 90%;
+    display:flex;
+    flex-wrap: wrap;
+    justify-content:space-between;
+    /*height: 200px;*/
+}
+#listbox{
+    background-color:rgba(25,30,34,0.67);
+    margin:10px;
+    min-width:21%;
+    padding:20px 20px 00px 20px;
+
+    /*width:100%; MOBILE PHONE*/
+}
+#listbox a{
+    transition-duration:.5s;
+}
+#listbox a:hover{
+    color:#FFBCBE;
+    /*font-size:200%;*/
+}
+#listbox #popularity{
+    text-align:center;
+    font-size:14px;
+    color:#a87c8c;
+    background-color:rgba(25, 30, 34, 0.51);
+
+}
+
+#content{
+	background-color: rgba(26, 31, 35, 0.5);
+	padding-top: 30px;
+	padding-bottom: 10px;
+}
+#innercontent{
+	background-color: rgba(25,30,34,0.50);
+	padding-top: 10px;
+	padding-bottom: 10px;
+	margin:30px 0 20px 0;
+	clear:both;
+
+}
+#loginbox{
+	background-color: rgba(25, 30, 34, 0.67);
+	padding-top: 30px;
+	padding-bottom: 10px;
+	margin-left: auto;
+    margin-right: auto;
+}
+/*#listbox input, textarea {
+    padding: 5px;
+    background-color: #232c33;
+    border: none;
+    color: white;
+    font-size: 20px;
+    margin: 0 10px 0 10px;
+    width:400px;
+    max-width: 400px;
+    min-width: 400px;
+}*/
+/*select{
+	width:310px;
+}*/
+#loginbox p{
+	padding:10px;
+}
+#rightinfo{
+	float:right;
+	margin-bottom:30px;
+	margin-top:30px;
+}
+#leftinfo{
+    width:100%;
+	/*float:left;*/
+	margin-bottom:30px;
+	margin-top:30px;
+}
+#userinfo{
+	float:right;
+	padding:0;
+	background-color:rgba(25,30,34,0.67);
+}
+#innercontent input{
+	background-color: #181d21;
+}
+#tagdiv{
+    display:inline-block;
+
+
+}
+#tagdiv x{
+    background-color:#232c33;
+    color:#f22273;
+    padding:10px;
+    margin:0 10px 10px 0px;
+    display:inline-block;
+    transition-duration: .5s;
+    font-size: x-large;
+}
+#votediv{
+    margin:0 10px 10px 0px;
+    display:grid;
+}
+#votediv x{
+    margin:0;
+    font-size:large;
+}
+#votediv a{
+    margin:0;
+    font-size:large;
+    text-align: center;
+    background-color:#203439;
+    color:#295d5d;
+    transition-duration:.5s;
+}
+#votediv a:hover{
+    color:#00ff72;
+    font-weight: bold;
+}
+#votediv input{
+    cursor: pointer;
+    background-color:#232c33;
+    border-style: none;
+    color: #f22273;
+    font-size:  large;
+    text-align: center;
+    width: 100px;
+    padding: 10px 0 10px 0;
+}
+/* Customize the label (the container) */
+.container {
+    display: block;
+    position: relative;
+    padding-left: 35px;
+    margin-bottom: 12px;
+    cursor: pointer;
+    font-size: 22px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+/* Hide the browser's default checkbox */
+.container input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    visibility: hidden;
+}
+
+/* Create a custom checkbox */
+.checkmark {
+    position: absolute;
+    margin-left:10px;
+    top: 0;
+    left: 0;
+    height: 25px;
+    width: 25px;
+    background-color: #232c33;
+}
+
+/* On mouse-over, add a grey background color */
+.container:hover input ~ .checkmark {
+    background-color: #111;
+}
+
+/* When the checkbox is checked, add a blue background */
+.container input:checked ~ .checkmark {
+    background-color: #f22273;
+}
+
+/* Create the checkmark/indicator (hidden when not checked) */
+.checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+}
+
+/* Show the checkmark when checked */
+.container input:checked ~ .checkmark:after {
+    display: block;
+}
+
+/* Style the checkmark/indicator */
+.container .checkmark:after {
+    left: 9px;
+    top: 5px;
+    width: 5px;
+    height: 10px;
+    border: solid white;
+    border-width: 0 3px 3px 0;
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg);
+}
+h1{
+	text-align: left;
+	color: white;
+	font-size:120px;
+	font-weight:500;
+	line-height:1.1;
+	margin:100px 0 0 0;
+	margin-left: auto;
+	margin-right: auto;
+}
+h2, h3, h4{
+	color: white;
+
+}
+#content p, #innercontent p{
+	/*text-align: left;*/
+	color: white;
+	font-size:20px;
+}
+#toolmenu{
+    width:20%;
+    display:flex;
+    margin: 10px 0 0 0;
+}
+#toolmenu a{
+    margin-left:  auto;
+    margin-right:  auto;
+    background-color: black;
+    padding: 10px;
+    font-weight:  bold;
+    transition-duration: .5s;
+}
+#toolmenu a:hover{
+    background-color:#45ada6;
+}
+p{
+	/*text-align: left;*/
+	color: white;
+	padding-left: 10px;
+	padding-right: 10px;
+	font-size:20px;
+	margin-top: 0;
+	margin-bottom: 0;
+
+}
+
+::selection {
+    background: #00ff72;
+    color: white;
+}
+
+#infodiv1, #infodiv2{
+	width: 100%;
+	min-height: 250px;
+	display: block;
+	padding-top: 10px;
+	padding-bottom: 10px;
+
+}
+#infodiv1 p, #infodiv2 p{
+	text-align: left;
+}
+#infodiv1{
+	background-color: #232c33;
+}
+
+#invisdiv{
+	width: 100%;
+	margin-right: auto;
+	margin-left: auto;
+}
+
+
+footer {
+    background-color: rgba(25,30,34,0.67);
+    color: white;
+    font-size: 20px;
+    width: 100%;
+    bottom:0;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    position: unset;
+    left: 0;
+    text-align: center;
+}
+
+/*#content h1, #content h2, #content h3, #content h4, #infodiv1 h1, #infodiv1 h2, #infodiv1 h3, #infodiv1 h4{
+	padding-left: 10px;
+	padding-right: 10px;
+}*/
+
+table{
+    display:table;
+    width:100%;
+    border-spacing:0;
+}
+tr:nth-child(odd) {
+	background-color: rgba(255, 188, 190, 0.03)
+}
+tr:nth-child(1) th {
+	background-color: rgba(25, 30, 34, 0.51);
+	padding: 4px;
+    text-align: left;
+    color:#a87c8c;
+}
+th, td {
+    border-width:0;
+    border:none;
+    color:#a87c8c;
+    /*display:table;*/
+}
+
+a:link{
+	color: #00ff72;
+	text-decoration: none;
+}
+a:visited{
+	color: #00ff72;
+	text-decoration: none;
+}
+
+
+/*
+"x" skal ikke ha egenskaper!!
+*/
+
+#searchbox input{
+	width: 90%;
+	height: 100%;
+	padding: 0;
+	color: #45ada6;
+	text-align: center;
+	border-style: none;
+	font-size: 200%;
+	font-family: verdana;
+}
+#searchbox button{
+    width: 10%;
+    height: 100%;
+    padding: 0;
+    color: #ff035c;
+    text-align: center;
+    margin:0;
+    background-color:#181d21;
+    border-style: none;
+    font-size: 200%;
+    font-family: verdana;
+    transition-duration: .5s;
+}
+#searchbox select{
+    width: 10%;
+    height: 100%;
+    padding: 0;
+    color: #ffffff;
+    text-align: center;
+    margin:0;
+    background-color:#181d21;
+    border-style: none;
+    font-family: verdana;
+    transition-duration: .5s;
+    font-size:large;
+}
+#searchbox button:hover{
+    background-color:#45ada6;
+}
+#searchbox{
+	width: 70%;
+	height: 60px;
+	/*padding: 20px;*/
+    display:inline-flex;
+	color: #45ada6;
+	border-color: #35585d;
+	border-style: solid;
+	/*border-radius: 10px;*/
+	border-width: 5px;
+	transition-duration: .5s;
+}
+#searchbox:hover{
+	/*color:#e92890;*/
+	text-decoration: none;
+	border-color: #45ada6;/*#6c00b7;*//*#e92890*/
+}
+input:link{
+	color: white;
+	text-decoration: none;
+}
+input:visited{
+	color: white;
+	text-decoration: none;
+}
+::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+    color:#233a3e;
+    opacity: 1; /* Firefox */
+}
+#innercontent input::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+	color:#203034;
+	opacity: 1; /* Firefox */
+}
+#innercontent #votediv input::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+    color:#ffffff;
+    opacity: 1; /* Firefox */
+}
+
+:-ms-input-placeholder { /* Internet Explorer 10-11 */
+	color:#203034;
+}
+
+:-ms-input-placeholder { /* Microsoft Edge */
+	color:#203034;
+}
