@@ -6736,6 +6736,9 @@ textarea.form-control-lg {
 .font-monospace {
   font-family: var(--bs-font-monospace) !important; }
 
+.fs-0 {
+  font-size: calc(1.525rem + 3.3vw) !important; }
+
 .fs-1 {
   font-size: calc(1.375rem + 1.5vw) !important; }
 
@@ -6753,6 +6756,9 @@ textarea.form-control-lg {
 
 .fs-6 {
   font-size: 1rem !important; }
+
+.fs-7 {
+  font-size: 0.85rem !important; }
 
 .fst-italic {
   font-style: italic !important; }
@@ -10074,6 +10080,9 @@ textarea.form-control-lg {
   .text-xxl-center {
     text-align: center !important; } }
 @media (min-width: 1200px) {
+  .fs-0 {
+    font-size: 4rem !important; }
+
   .fs-1 {
     font-size: 2.5rem !important; }
 
@@ -10197,27 +10206,15 @@ textarea.form-control-lg {
     position: absolute;
     background-color: #00002a;
     overflow: hidden; }
-    .css-logo > .ball > .cores {
-      transition-duration: 16s;
-      width: 400%;
+    .css-logo > .ball > .core {
+      transition-duration: 3s;
+      width: 100%;
       height: 100%;
       position: absolute;
-      left: -250%;
-      top: 50%; }
-      .css-logo > .ball > .cores > .core1 {
-        background-color: #00ff72;
-        border-radius: 50%;
-        left: 0;
-        position: absolute;
-        height: 100%;
-        width: 25%; }
-      .css-logo > .ball > .cores > .core2 {
-        background-color: #00ff72;
-        border-radius: 50%;
-        right: 0;
-        position: absolute;
-        height: 100%;
-        width: 25%; }
+      left: 50%;
+      top: 50%;
+      border-radius: 50%;
+      background-color: #00ff72; }
   .css-logo .planet {
     position: absolute;
     border-radius: 50%;
@@ -10231,8 +10228,11 @@ textarea.form-control-lg {
       left: 25%;
       top: 25%; }
 
-.css-logo:hover .ball .cores {
-  left: 50%; }
+.css-logo:hover .ball .core {
+  left: 15%;
+  top: 15%;
+  width: 70%;
+  height: 70%; }
 
 .c-m {
   left: 50%;

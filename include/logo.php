@@ -18,9 +18,6 @@
         <div class="ring"></div>
     </div>
     <div class="ball">
-        <div class="cores">
-            <div class="core1"></div>
-            <div class="core2"></div>
-        </div>
+        <div class="core"></div>
     </div>
 </div>
