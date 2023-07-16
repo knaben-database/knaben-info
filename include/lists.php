@@ -15,6 +15,8 @@ $psql = PostgreSQL::init();
  *   test_reason: string|null,
  *   added_time: DateTimeImmutable,
  *   last_active: DateTimeImmutable,
+ *   last_checked: DateTimeImmutable,
+ *   categories: string[],
  *   clicks: int,
  *   clicks_last_24h: int,
  *   proxies: array{array{
@@ -43,16 +45,79 @@ SELECT
     w.added_time,
     w.last_active,
     w.last_checked,
+    COALESCE(cats.names, '[]') as categories,
     COUNT(c.proxy_id) as clicks,
     COUNT(CASE WHEN c.time >= NOW() - INTERVAL '24 HOURS' THEN c.proxy_id END) as clicks_last_24h
 FROM
     website w
+LEFT JOIN (
+    SELECT
+        jsonb_agg(cat.name) as names,
+        wc.web_id
+    FROM
+        categories cat
+    INNER JOIN website_categories wc on cat.id = wc.cat_id
+    GROUP BY wc.web_id
+) cats ON cats.web_id = w.id
 LEFT JOIN proxy_list pl ON pl.web_id = w.id
 LEFT JOIN clicks c ON c.proxy_id = pl.id
 GROUP BY
-    w.id
+    w.id, cats.names
 ORDER BY
     clicks DESC;
+SQL;
+
+$options = [
+    "columns" => [
+        "ping::float",
+        "up::bool",
+        "added_time::datetime",
+        "last_active::datetime",
+        "last_checked::datetime",
+        "categories::string[]"
+    ],
+    "cache" => [
+        "name" => "websites_cache",
+        "expire" => 21600, // 6 hours
+        "dynamic" => [
+            "query" => "SELECT md5(string_agg(last_checked::text, '')) as hash FROM website"
+        ]
+    ]
+];
+$websites = $psql->query($sql, $options);
+$ids = implode(",",array_column($websites, "id"));
+
+
+/**
+ * Now from the query above, use the output and query the relevant proxies
+ */
+$sql = <<<SQL
+WITH cte AS (
+    SELECT
+        id,
+        web_id,
+        url,
+        ping,
+        return_code,
+        up,
+        test_reason,
+        added_time,
+        last_active,
+        last_checked,
+        COUNT(c.proxy_id) clicks,
+        COUNT(CASE WHEN c.time >= NOW() - INTERVAL '24 HOURS' THEN c.proxy_id END) as clicks_last_24h,
+        ROW_NUMBER() OVER (PARTITION BY web_id ORDER BY COUNT(CASE WHEN c.time >= NOW() - INTERVAL '24 HOURS' THEN c.proxy_id END) DESC) as rn
+    FROM
+        proxy_list pl
+    LEFT JOIN clicks c on pl.id = c.proxy_id
+    WHERE
+        pl.web_id IN ($ids)
+    GROUP BY id
+)
+SELECT *
+FROM cte
+WHERE rn <= 10
+ORDER BY web_id, clicks_last_24h DESC;
 SQL;
 
 $options = [
@@ -64,21 +129,48 @@ $options = [
         "last_checked::datetime"
     ],
     "cache" => [
-        "name" => "websites_cache",
+        "name" => "proxy_list_cache",
         "expire" => 21600, // 6 hours
         "dynamic" => [
-            "query" => "SELECT md5(string_agg(last_checked::text, '')) as hash FROM website"
+            "query" => "SELECT md5(string_agg(last_checked::text, '')) as hash FROM proxy_list"
         ]
     ]
 ];
-$results = $psql->query($sql, $options);
+$proxies = $psql->query($sql, $options);
+foreach ($websites as &$web){
+    if (!isset($web["proxies"])) $web["proxies"] = [];
+    foreach ($proxies as $proxy){
+        if ($proxy["web_id"] == $web["id"]){
+            $web["proxies"][] = $proxy;
+        }
+    }
+}
 
-/**
- * Now from the query above, use the output and query the relevant proxies
- */
-
-
-
-echo "<pre>";
-echo json_encode($results, JSON_PRETTY_PRINT);
-echo "</pre>";
+foreach ($websites as $website): ?>
+<div class="bg-darkblue p-3 m-4" style="width: 20%">
+    <div>
+        <div>
+            <div class="d-grid w-100">
+                <div class="text-white text-opacity-50 d-inline-flex ms-auto">Ping:&nbsp;<?= $website["ping"]*1000 ?>ms</div>
+            </div>
+            <h1 class="text-white mb-0"><?= $website["name"] ?></h1>
+        </div>
+        <div class="d-flex flex-wrap">
+            <?php foreach ($website["categories"] as $category): ?>
+                <div class="fs-7 px-2 me-2 mb-2 bg-white text-pink bg-opacity-25"><?= $category ?></div>
+            <?php endforeach; ?>
+        </div>
+        <div class="w-100 d-inline-flex">
+            <div class="fancy-link <?= !$website["up"] ? 'text-red' : '' ?>">
+                <a title="The official link" href="<?= $website["url"] ?>"><?= $website["url"] ?></a>
+            </div>
+            <div class="text-opacity-50 d-inline-flex me-auto">&nbsp;<?= !$website["up"] ? '<div class="text-white">(Down)</div>' : '' ?></div>
+        </div>
+    </div>
+    <div class="p-3">
+        <?php foreach ($website["proxies"] as $proxy): ?>
+            <div class="fs-7 px-2 me-2 mb-2 bg-white text-pink bg-opacity-25"><?= $proxy["url"] ?></div>
+        <?php endforeach; ?>
+    </div>
+</div>
+<?php endforeach; ?>

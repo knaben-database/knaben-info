@@ -1,53 +1,3 @@
-var BloatButCool = /** @class */ (function () {
-    function BloatButCool() {
-    }
-    BloatButCool.init = function () {
-        var logos = document.querySelectorAll(".css-logo");
-        var _loop_1 = function (i) {
-            var elm = logos[i];
-            var logo = {
-                planetPopInterval: 3,
-                elm: elm
-            };
-            elm.addEventListener("mouseenter", function () { return logo.planetPopInterval = 0.25; });
-            elm.addEventListener("mouseleave", function () { return logo.planetPopInterval = 3; });
-            this_1.logoEffect(logo);
-            this_1.logos.push(logo);
-        };
-        var this_1 = this;
-        for (var i = 0; i < logos.length; i++) {
-            _loop_1(i);
-        }
-    };
-    BloatButCool.logoEffect = function (logo) {
-        var _this = this;
-        var randomTimer = logo.planetPopInterval;
-        var counter = 10;
-        var myFunction = function () {
-            _this.blinkRandomPlanet(logo.elm);
-            counter = logo.planetPopInterval * 1000;
-            setTimeout(myFunction, counter);
-        };
-        setTimeout(myFunction, counter);
-    };
-    BloatButCool.blinkRandomPlanet = function (elm) {
-        var duration = 2;
-        var planetCores = elm.querySelectorAll(".planet-core");
-        var choice = Math.floor(Math.random() * planetCores.length);
-        var highlightColor = Style().getPropertyValue("--bs-highlight");
-        var planetCore = planetCores[choice];
-        planetCore.style.transitionDuration = "";
-        planetCore.style.backgroundColor = highlightColor;
-        setInterval(function () {
-            planetCore.style.transitionDuration = "".concat(duration, "s");
-            setInterval(function () {
-                planetCore.style.backgroundColor = "";
-            }, duration * 100);
-        }, 100);
-    };
-    BloatButCool.logos = [];
-    return BloatButCool;
-}());
 /**
  * Typescript part to init things
  */
@@ -59,6 +9,78 @@ window.addEventListener('load', function () {
     // Init bloat
     BloatButCool.init();
 });
+var BloatButCool = /** @class */ (function () {
+    function BloatButCool() {
+    }
+    BloatButCool.init = function () {
+        // Init logo bloat
+        var logos = document.querySelectorAll(".css-logo");
+        for (var i = 0; i < logos.length; i++) {
+            var logo = logos[i];
+            new LogoBloat(logo);
+        }
+    };
+    return BloatButCool;
+}());
+var LogoBloat = /** @class */ (function () {
+    function LogoBloat(elm) {
+        var _this = this;
+        /**
+         * Times the planets blink per second
+         */
+        this.blinkInterval = {
+            idle: 0.25,
+            active: 3
+        };
+        /**
+         * If we are hovering it or not
+         */
+        this.hovering = false;
+        this.elm = elm;
+        this.blinkLoop();
+        this.elm.addEventListener("mouseenter", function () { return _this.hovering = true; });
+        this.elm.addEventListener("mouseleave", function () { return _this.hovering = false; });
+    }
+    LogoBloat.prototype.blinkLoop = function () {
+        var _this = this;
+        var planetCores = this.elm.querySelectorAll(".planet-core");
+        var highlightColor = Style().getPropertyValue("--bs-highlight");
+        var blinkingPlanetCores = new Set();
+        var counter = 0;
+        setInterval(function () {
+            if (!_this.hovering) {
+                counter += _this.blinkInterval.idle;
+                if (_this.blinkInterval.active > counter)
+                    return;
+                else
+                    counter = 0;
+            }
+            // Check if all the planet cores are already blinking
+            if (blinkingPlanetCores.size === planetCores.length) {
+                return;
+            }
+            var randomPlanetCore;
+            do {
+                var randomIndex = Math.floor(Math.random() * planetCores.length);
+                randomPlanetCore = planetCores[randomIndex];
+            } while (blinkingPlanetCores.has(randomPlanetCore));
+            // Add the selected planet core to the set of blinking planet cores
+            blinkingPlanetCores.add(randomPlanetCore);
+            // Change the background color of the selected planet core
+            randomPlanetCore.style.backgroundColor = highlightColor; // Change to the desired color
+            randomPlanetCore.style.transform = "scale(1.1)";
+            randomPlanetCore.style.transitionDuration = "";
+            // Set a timeout to change the background color back after some time
+            setTimeout(function () {
+                blinkingPlanetCores.delete(randomPlanetCore);
+                randomPlanetCore.style.transitionDuration = "".concat(_this.blinkInterval.active, "s");
+                randomPlanetCore.style.backgroundColor = ""; // Change back to the original color
+                randomPlanetCore.style.transform = "scale(1)";
+            }, _this.blinkInterval.idle * 1000); // Change the duration of the blink here
+        }, 1 / this.blinkInterval.active * 1000);
+    };
+    return LogoBloat;
+}());
 /**
  * Function to manage stylesheets
  * @param title{string} Title of the stylesheet

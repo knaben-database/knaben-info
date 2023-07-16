@@ -10221,6 +10221,7 @@ textarea.form-control-lg {
     background-color: #00002a; }
     .css-logo .planet > .planet-core {
       position: absolute;
+      transition-timing-function: cubic-bezier(0.22, 0.61, 0.36, 1);
       border-radius: 50%;
       background-color: #ffbcbe;
       height: 50%;
@@ -10251,5 +10252,33 @@ body {
   /*background-color: map-get($theme-colors, "darkblue");*/
   background: linear-gradient(#ffbcbe, #00002a);
   min-height: 100vh; }
+
+.fancy-link {
+  position: relative;
+  width: fit-content; }
+  .fancy-link > a {
+    transition-duration: 0.3s;
+    text-decoration: none;
+    color: #00ff72; }
+    .fancy-link > a:hover {
+      opacity: 0.8; }
+  .fancy-link.text-red > a {
+    color: #dc3545; }
+  .fancy-link.text-red::after {
+    background-color: #dc3545; }
+  .fancy-link::after {
+    transition-duration: 0.6s;
+    content: '';
+    width: 0;
+    height: 1px;
+    background-color: #00ff72;
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: auto; }
+  .fancy-link:hover::after {
+    content: '';
+    width: 90%; }
 
 /*# sourceMappingURL=style.css.map */
