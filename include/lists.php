@@ -20,12 +20,23 @@ $psql = PostgreSQL::init();
  *   clicks: int,
  *   clicks_last_24h: int,
  *   proxies: array{array{
- *      id: int
+ *      id: int,
+ *      web_id: int,
+ *      url: string,
+ *      ping: float,
+ *      return_code: int,
+ *      up: bool,
+ *      test_reason: string|null,
+ *      added_time: DateTimeImmutable,
+ *      last_active: DateTimeImmutable,
+ *      last_checked: DateTimeImmutable,
+ *      clicks: int,
+ *      clicks_last_24h: int,
+ *      rn: int
  *   }}
  * }} $websites
  */
 $websites = [];
-
 
 
 /**
@@ -147,7 +158,7 @@ foreach ($websites as &$web){
 }
 
 foreach ($websites as $website): ?>
-<div class="bg-darkblue p-3 m-4" style="width: 20%">
+<div class="bg-darkblue bg-opacity-75 p-3 mx-2 my-4" style="width: 23%">
     <div>
         <div>
             <div class="d-grid w-100">
@@ -167,10 +178,26 @@ foreach ($websites as $website): ?>
             <div class="text-opacity-50 d-inline-flex me-auto">&nbsp;<?= !$website["up"] ? '<div class="text-white">(Down)</div>' : '' ?></div>
         </div>
     </div>
-    <div class="p-3">
-        <?php foreach ($website["proxies"] as $proxy): ?>
-            <div class="fs-7 px-2 me-2 mb-2 bg-white text-pink bg-opacity-25"><?= $proxy["url"] ?></div>
-        <?php endforeach; ?>
-    </div>
+    <table class="mt-2 w-100 text-nowrap">
+        <thead>
+            <tr class="text-pink bg-white bg-opacity-25">
+                <th class="px-2">Link</th>
+                <th class="px-2 text-center">Clicks 24h</th>
+                <th class="px-2 text-center">Clicks</th>
+                <th class="px-2 text-center">Ping</th>
+            </tr>
+        </thead>
+        <tbody>
+        <?php $showLine = false; foreach ($website["proxies"] as $proxy): ?>
+            <tr class="<?= $showLine ? "border-top border-white border-opacity-25" : ""; ?>">
+                <!--class="fs-7 px-2 me-2 mb-2 bg-white text-pink bg-opacity-25"-->
+                <th><div class="fancy-link"><a href="<?= $proxy["url"] ?>"><?= $proxy["url"] ?></a></div></th>
+                <th class="text-center text-white text-opacity-50"><?= $proxy["clicks_last_24h"] ?></th>
+                <th class="text-center text-white text-opacity-50"><?= $proxy["clicks"] ?></th>
+                <th class="text-center text-white text-opacity-50"><?= $proxy["ping"]*1000 ?>ms</th>
+            </tr>
+        <?php $showLine = true; endforeach; ?>
+        </tbody>
+    </table>
 </div>
 <?php endforeach; ?>
