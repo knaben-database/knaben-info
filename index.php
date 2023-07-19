@@ -8,6 +8,7 @@ $TIMEMEASURE = microtime(TRUE);
     <title>Knaben's Proxy List</title>
     <link rel="icon" href="/favicon.ico">
     <link rel="stylesheet" href="/css/style.css">
+    <script src="/js/bootstrap.bundle.min.js"></script>
     <script src="/js/main.js?v=<?= filemtime($_SERVER['DOCUMENT_ROOT'].'/js/main.js') ?>"></script>
 </head>
 <body>
@@ -15,6 +16,11 @@ $TIMEMEASURE = microtime(TRUE);
     <?php include "$_SERVER[DOCUMENT_ROOT]/include/logo.php" ?>
 </div>
 <h1 class="m-auto text-center text-darkblue fs-0">Knaben's Proxy List</h1>
+<div class="d-flex justify-content-center">
+    <div class="text-highlight d-ruby mx-2" data-bs-toggle="tooltip" title='Proxies and websites with this color are confirmed to be working'><div class="bg-highlight" style="height: 10px;width:10px"></div> Working</div>
+    <div class="text-white d-ruby mx-2" data-bs-toggle="tooltip" title='Checking towards websites and proxies with this color may have been blocked. 403 Forbidden return code.'><div class="bg-white" style="height: 10px;width:10px"></div> Most likely working</div>
+    <div class="text-darkblue text-opacity-50 d-ruby mx-2" data-bs-toggle="tooltip" title='Proxies that are not working will be hidden'><div class="border border-darkblue border-opacity-50" style="height: 10px;width:10px"></div> (Down proxies gets hidden)</div>
+</div>
 <hr class="mx-5"/>
 <div class="m-4 d-flex flex-wrap justify-content-around">
     <?php include_once "$_SERVER[DOCUMENT_ROOT]/include/lists.php" ?>

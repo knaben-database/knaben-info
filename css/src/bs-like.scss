@@ -5,3 +5,34 @@
   position: absolute;
 }
 
+.w-min{
+  width: min-content;
+}
+.w-max{
+  width: max-content;
+}
+.h-min{
+  height: min-content;
+}
+.h-max{
+  height: max-content;
+}
+
+.w-fit{
+  width: fit-content;
+  width: -moz-fit-content;
+}
+.h-fit{
+  height: fit-content;
+}
+
+.d-ruby{
+  display: ruby;
+}
+
+.text-overflow-ellipsis {
+  overflow-x: hidden;
+  text-overflow: ellipsis;
+  -ms-text-overflow: ellipsis;
+  -o-text-overflow: ellipsis;
+}

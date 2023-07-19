@@ -1,8 +1,210 @@
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
+var Api = (function () {
+    /**
+     * Thanks Bing AI
+     * @param headers
+     */
+    function convertHeaders(headers) {
+        var arr = headers.trim().split(/[\r\n]+/);
+        var headerMap = new Headers();
+        arr.forEach(function (line) {
+            var parts = line.split(': ');
+            var header = parts.shift();
+            var value = parts.join(': ');
+            headerMap.append(header, value);
+        });
+        return headerMap;
+    }
+    /**
+     *
+     * @param url The url to send the data to. Starting with slash (/) means Protocol://Host/${Your shit}
+     * @param data The data to send, can be anything. But preferably json data. If data is not provided, it will default to get request instead
+     * @param options Options to merge with fetch RequestInit
+     */
+    function sendJSON(url, data, options) {
+        if (data === void 0) { data = {}; }
+        if (options === void 0) { options = {}; }
+        var defaultOptions = {
+            method: "post",
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            }
+        };
+        if (data && Object.keys(data).length === 0 && Object.getPrototypeOf(data) === Object.prototype)
+            defaultOptions = {
+                method: "get"
+            };
+        var apiOptions = __assign(__assign({}, defaultOptions), options);
+        // Handling get request
+        if (apiOptions["method"] == "get" || apiOptions["method"] == "head") {
+            if ("headers" in apiOptions && "Content-Type" in apiOptions["headers"])
+                delete apiOptions["headers"]["Content-Type"];
+            var requestQuery = [];
+            for (var i = 0; i < Object.keys(data).length; i++) {
+                var key = Object.keys(data)[i];
+                requestQuery.push(key + "=" + data[key]);
+            }
+            if (requestQuery.length > 0) {
+                if (url.indexOf("?") === -1)
+                    url += "?" + requestQuery.join("&");
+                else
+                    url += "&" + requestQuery.join("&");
+            }
+        }
+        else {
+            apiOptions["body"] = JSON.stringify(data);
+        }
+        var response = {
+            headers: null,
+            ok: null,
+            status: null,
+            statusText: null,
+            error: null,
+            error_msg: null,
+            error_desc: null,
+            type: null,
+            server_time: null,
+            source: null
+        };
+        return fetch(url, apiOptions).then(function (x) {
+            response.headers = x.headers;
+            response.ok = x.ok;
+            response.status = x.status;
+            response.statusText = x.statusText;
+            if (response.status === 204 || apiOptions["method"] == "head")
+                return; // Response 204 is an exception, with no body at all
+            return x.json();
+        }).then(function (data) {
+            var _a;
+            if (response.status === 204 || apiOptions["method"] == "head")
+                return Promise.resolve(response);
+            /**/ /**
+             * The raw response might look something like this:
+             * ```json
+             *  {
+             *   "meta": {
+             *     "error": false,
+             *     "error_msg": {
+             *       "title": null,
+             *       "desc": null
+             *     },
+             *     "status_code": 200,
+             *     "type": "single",
+             *     "server_time": 1679841247
+             *   },
+             *   "source": {
+             *     "my_data": "something"
+             *   }
+             * }
+             * ```
+             */ /**/
+            // We want the server time in epoch ms
+            var server_time = data["meta"]["server_time"];
+            if (1000000000000 > server_time)
+                server_time *= 1000;
+            response.error = data["meta"]["error"];
+            response.error_msg = data["meta"]["error_msg"]["title"];
+            response.error_desc = data["meta"]["error_msg"]["desc"];
+            response.type = data["meta"]["type"];
+            response.server_time = new Date(server_time);
+            response.source = (_a = data["source"]) !== null && _a !== void 0 ? _a : null;
+            if (response.error)
+                return Promise.reject(response);
+            return Promise.resolve(response);
+        });
+    }
+    /**
+     * For files and such, we didn't bother to create a fancy function for it.
+     * Pass the XMLHttpRequest response to this function
+     * @param xhr
+     * @return Promise<Response> The formatted Response we
+     */
+    function formatXMLHttpRequest(xhr) {
+        var _a;
+        var r = JSON.parse(xhr.responseText);
+        var meta = r["meta"];
+        var server_time = meta["server_time"];
+        if (1000000000000 > server_time)
+            server_time *= 1000;
+        var response = {
+            headers: convertHeaders(xhr.getAllResponseHeaders()),
+            ok: !meta["error"] || 300 > xhr.status,
+            status: xhr.status || meta["status_code"],
+            statusText: xhr.statusText,
+            error: xhr.status >= 400,
+            error_msg: meta["error_msg"]["title"],
+            error_desc: meta["error_msg"]["desc"],
+            type: meta["type"],
+            server_time: server_time,
+            source: (_a = r["source"]) !== null && _a !== void 0 ? _a : null
+        };
+        if (response.error)
+            return Promise.reject(response);
+        return Promise.resolve(response);
+    }
+    // Here you can set what to be public
+    return {
+        // Name   : Function
+        json: sendJSON,
+        formatXMLHttpRequest: formatXMLHttpRequest
+    };
+})();
+var Clicks = /** @class */ (function () {
+    function Clicks() {
+    }
+    Clicks.init = function () {
+        var _this = this;
+        var proxyLinkElements = document.querySelectorAll(".proxy-link");
+        var _loop_1 = function (i) {
+            var proxyLinkElement = proxyLinkElements[i];
+            var data_proxy_id = proxyLinkElement.getAttribute("data-proxy-id");
+            var proxy_id = parseInt(data_proxy_id);
+            var link = proxyLinkElement.getAttribute("href");
+            proxyLinkElement.addEventListener("click", function (e) {
+                e.preventDefault();
+                _this.click(proxy_id, link, true);
+            });
+            proxyLinkElement.addEventListener("auxclick", function (e) {
+                _this.click(proxy_id, link);
+            });
+        };
+        for (var i = 0; i < proxyLinkElements.length; i++) {
+            _loop_1(i);
+        }
+    };
+    Clicks.click = function (id, link, redirect) {
+        if (redirect === void 0) { redirect = false; }
+        Api.json("/php/api/click.php", { id: id }, { method: "head" }).then(function (data) {
+            if (redirect)
+                window.location.href = link;
+        });
+    };
+    return Clicks;
+}());
 /**
  * Typescript part to init things
  */
 // This will trigger first
 document.addEventListener('DOMContentLoaded', function () {
+    // Init click events
+    Clicks.init();
+    // Enable tooltips
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+        // @ts-ignore
+        return new bootstrap.Tooltip(tooltipTriggerEl);
+    });
 });
 // Wait for everything to load, then set event for
 window.addEventListener('load', function () {

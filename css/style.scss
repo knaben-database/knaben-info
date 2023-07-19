@@ -30,6 +30,17 @@ $font-sizes: (
   "7": 0.85rem
 );
 
+// tooltips settings
+$tooltip-max-width:                 200px;
+$tooltip-color:                     white;
+$tooltip-bg:                        map-get($theme-colors, "darkblue");
+$tooltip-opacity:                   1.0;
+$tooltip-margin:                    0;
+
+$tooltip-arrow-width:               .8rem;
+$tooltip-arrow-height:              .4rem;
+$tooltip-arrow-color:               $tooltip-bg;
+
 @import "src/bootstrap/scss/bootstrap";
 @import "src/logo";
 @import "src/bs-like";
