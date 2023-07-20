@@ -1,7 +1,10 @@
 <?php
 
+include_once($_SERVER["DOCUMENT_ROOT"] . '/php/classes/func/func.php');
+$func = Func::init();
+
 // Restrict to only me
-if ($_SERVER["REMOTE_ADDR"] != "192.168.1.32"){
+if ($func::$ip->ip != "94.101.114.183"){
     echo "こんにちは！";
     die;
 }
@@ -24,60 +27,39 @@ $psql = PostgreSQL::init();
     <link rel="stylesheet" href="/css/style.css">
 </head>
 <body style="color: white; overflow: auto">
-<div style="z-index: 110;position: fixed;bottom: 0;left: 0;" class="bg-dark2">
+<div style="z-index: 110;position: fixed;bottom: 0;left: 0;" class="bg-darkblue">
     <p style="color: red;margin: 0;padding: 12px;">The page broke!</p>
 </div>
 
 <!-- Here starts the testing -->
 
-
+<pre>
 <?php
 
-function psswd() : string {
-    $value1 = "aRUO4FqJ1KuMDsaLWBpQXA==";
-    $value2 = "LWpDn4gMiPquvfqCcQYxng==";
-    $keys = file_get_contents('/home/***REMOVED***/Documents/psswd_keys.txt');
-    $key1 = trim(explode("\n", $keys)[0]);
-    $key2 = trim(explode("\n", $keys)[1]);
-    $psswd1 = openssl_decrypt($value1,"AES-256-ECB", $key1);
-    $psswd1 = strtolower(strrev($psswd1));
-    $psswd2 = openssl_decrypt($value2,"AES-128-ECB", $key2);
-    $psswd2 = strtolower(strrev($psswd2));
-    return salt($psswd1, $psswd2);
-}
-const SETTINGS = [
-    "host" => "127.0.0.1",
-    "port" => 5432,
-    "user" => "postgres"
+$dates = [
+    "2023-07-16 23:32:37.817942+00",
+    "2023-07-16 23:32:37.817942-01",
+    "2023-07-16+02",
+    "2023-07-16-03",
+    "2023-07-16 23:32:37 +04",
+    "2023-07-16 23:32:37-05",
+    "2023-07-16",
+    "07-16-2023",
+    "07-16-2023+06",
+    "07-12+07",
+    "2023-07-16 23:32:37",
+    "2023-07-16 23:32:37.817942"
 ];
-$dsn = "pgsql:host=".SETTINGS["host"].";port=".SETTINGS["port"].";dbname=knabeninfo;";
-$dbh = new PDO($dsn, SETTINGS["user"], psswd());
-$sql = <<<SQL
-SELECT
-    w.id,
-    w.name,
-    w.description,
-    w.ping,
-    w.return_code,
-    w.up,
-    w.test_reason,
-    w.added_time,
-    w.last_active,
-    COUNT(c.proxy_id) as clicks,
-    COUNT(CASE WHEN c.time >= NOW() - INTERVAL '24 HOURS' THEN c.proxy_id END) as clicks_last_24h
-FROM
-    website w
-LEFT JOIN proxy_list pl ON pl.web_id = w.id
-LEFT JOIN clicks c ON c.proxy_id = pl.id
-GROUP BY
-    w.id;
-SQL;
-$sth = $dbh->prepare($sql);
-$sth->execute();
 
-echo json_encode($sth->fetchAll(PDO::FETCH_ASSOC));
+// (\d+-\d+-\d+((\-|\+)\d+)$)|\.\d+((\-|\+)\d+$)|:\d+((\-|\+)\d+$)
+$pattern = "/(?<!\d\d\d\d-\d\d)([+-]\d\d$)/";
+foreach ($dates as $date){
+    if(preg_match($pattern, $date, $matches) !== FALSE && isset($matches[0])) // Outputs 1
+        echo $matches[0] . "\n";
+}
 
 ?>
+</pre>
 
 <script>
 
@@ -86,7 +68,7 @@ echo json_encode($sth->fetchAll(PDO::FETCH_ASSOC));
 
 <!-- Testing ends here -->
 
-<div style="z-index: 111;position: fixed;bottom: 0;left: 0;" class="bg-dark2">
+<div style="z-index: 111;position: fixed;bottom: 0;left: 0;" class="bg-darkblue">
     <p style="color: lime;margin: 0;padding: 12px;">The page loaded correctly nice!</p>
 </div>
 </body>

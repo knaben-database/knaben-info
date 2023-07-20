@@ -10264,7 +10264,7 @@ textarea.form-control-lg {
   display: ruby; }
 
 .text-overflow-ellipsis {
-  overflow-x: hidden;
+  overflow: hidden;
   text-overflow: ellipsis;
   -ms-text-overflow: ellipsis;
   -o-text-overflow: ellipsis; }

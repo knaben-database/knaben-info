@@ -1,7 +1,17 @@
 <?php
 
+include_once($_SERVER["DOCUMENT_ROOT"] . '/php/classes/func/func.php');
 require_once ($_SERVER['DOCUMENT_ROOT'].'/php/classes/PostgreSQL.php');
 $psql = PostgreSQL::init();
+
+const MAX_TIMEOUT = 6.0; //s
+const MIN_TIMEOUT = 0.3; //s
+
+function colorsBetweenOffset($color1, $color2, $minTime, $maxTime, $time){
+    $func = func::init();
+    $percentage = max($time*1000 - $minTime*1000, 0) / ($maxTime*1000 - $minTime*1000);
+    return $func::$colors::colorBetween($color1, $color2, $func::$math::easeOut($percentage, 0.8));
+}
 
 /**
  * @var array{array{
@@ -159,12 +169,23 @@ foreach ($websites as &$web){
     }
 }
 
+/**
+ * Since the last_checked is set on all rows, and all rows are updated at the same time we do this
+ * @var $lastChecked DateTimeImmutable
+ */
+$lastChecked = $websites[0]["last_checked"];
+?>
+    <div class="position-absolute top-0 end-0 pe-4 text-darkblue text-opacity-75" data-bs-toggle="tooltip" title="<?= $lastChecked->format("Y-m-d H:i:sT") ?>" style="transform: translateY(-100%);">
+        Updated <?= round(((new DateTimeImmutable())->getTimestamp() - $lastChecked->getTimestamp())/60) ?>m ago
+    </div>
+<?php
+
 foreach ($websites as $website):
-$textColor = "";
-if (in_array($website["return_code"], [403, 401])) $textColor = "text-white";
-else if (!$website["up"]) $textColor = "text-red";
+    $textColor = "";
+    if (in_array($website["return_code"], [403, 401])) $textColor = "text-white";
+    else if (!$website["up"]) $textColor = "text-red";
     ?>
-<div class="bg-darkblue bg-opacity-75 p-3 mx-2 my-4" style="width: 23%">
+<div class="bg-darkblue bg-opacity-75 p-3 mx-2 my-4 position-relative" style="width: 23%">
     <div>
         <div class="d-flex w-100">
             <div class="w-100 d-grid">
@@ -177,7 +198,7 @@ else if (!$website["up"]) $textColor = "text-red";
                     <?php endif; ?>
                 </div>
             </div>
-            <div class="text-white text-opacity-50 d-inline-flex ms-auto">Ping:&nbsp;<?= round($website["ping"]*1000) ?>ms</div>
+            <div style="color: <?= colorsBetweenOffset("#FFFFFF", "#FF0000", MIN_TIMEOUT, MAX_TIMEOUT, $website["ping"]) ?>" class="d-inline-flex ms-auto">Ping:&nbsp;<?= round($website["ping"]*1000) ?>ms</div>
         </div>
         <h1 class="text-white mb-0"><?= $website["name"] ?></h1>
     </div>
@@ -221,7 +242,7 @@ else if (!$website["up"]) $textColor = "text-red";
                 </th>
                 <th class="text-center text-white text-opacity-50"><?= $proxy["clicks_last_24h"] ?></th>
                 <th class="text-center text-white text-opacity-50"><?= $proxy["clicks"] ?></th>
-                <th class="text-center text-white text-opacity-50"><?= round($proxy["ping"]*1000) ?>ms</th>
+                <th style="color: <?= colorsBetweenOffset("#FFFFFF", "#FF0000", MIN_TIMEOUT, MAX_TIMEOUT, $proxy["ping"]) ?>" class="text-center"><?= round($proxy["ping"]*1000) ?>ms</th>
             </tr>
         <?php
             $showLine = true;

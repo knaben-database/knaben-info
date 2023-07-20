@@ -408,7 +408,14 @@ class PostgreSQL
                 $item = (float)($item);
                 break;
             case "datetime":
-                $item = new DateTimeImmutable($item);
+                // Check if timezone
+                $pattern = "/(?<!\d\d\d\d-\d\d)([+-]\d\d$)/";
+                if(preg_match($pattern, $item, $matches) !== FALSE && isset($matches[0])) {
+                    $tz = $matches[0];
+                    $item = explode($tz, $item)[0];
+                    $item = new DateTimeImmutable($item, new DateTimeZone($tz));
+                }else
+                    $item = new DateTimeImmutable($item);
                 break;
             case "json":
                 $item = json_decode($item, true);
