@@ -10215,6 +10215,12 @@ textarea.form-control-lg {
       top: 50%;
       border-radius: 50%;
       background-color: #00ff72; }
+      .css-logo > .ball > .core.show-core {
+        left: 15% !important;
+        top: 15% !important;
+        width: 70% !important;
+        height: 70% !important;
+        background-color: #ffbcbe !important; }
   .css-logo .planet {
     position: absolute;
     border-radius: 50%;
@@ -10228,12 +10234,13 @@ textarea.form-control-lg {
       width: 50%;
       left: 25%;
       top: 25%; }
-
-.css-logo:hover .ball .core {
-  left: 15%;
-  top: 15%;
-  width: 70%;
-  height: 70%; }
+  .css-logo:hover .ball .core {
+    left: 15%;
+    top: 15%;
+    width: 70%;
+    height: 70%; }
+    .css-logo:hover .ball .core.show-core {
+      background-color: #00ff72 !important; }
 
 .c-m {
   left: 50%;
@@ -10280,6 +10287,19 @@ body {
   /*background-color: map-get($theme-colors, "darkblue");*/
   background: linear-gradient(#ffbcbe, #00002a);
   min-height: 100vh; }
+
+@media (min-width: 540px) {
+  div.proxyBox {
+    width: unset; } }
+@media (min-width: 960px) {
+  div.proxyBox {
+    width: 48%; } }
+@media (min-width: 1140px) {
+  div.proxyBox {
+    width: 31%; } }
+@media (min-width: 1320px) {
+  div.proxyBox {
+    width: 23%; } }
 
 .fancy-link {
   position: relative;

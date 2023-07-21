@@ -172,8 +172,10 @@ var Clicks = /** @class */ (function () {
             var proxy_id = parseInt(data_proxy_id);
             var link = proxyLinkElement.getAttribute("href");
             proxyLinkElement.addEventListener("click", function (e) {
-                e.preventDefault();
-                _this.click(proxy_id, link, true);
+                var redirect = !_this.SHIFT && !_this.CTRL;
+                if (redirect)
+                    e.preventDefault();
+                _this.click(proxy_id, link, redirect);
             });
             proxyLinkElement.addEventListener("auxclick", function (e) {
                 _this.click(proxy_id, link);
@@ -182,6 +184,19 @@ var Clicks = /** @class */ (function () {
         for (var i = 0; i < proxyLinkElements.length; i++) {
             _loop_1(i);
         }
+        // Keep track of CTRL state
+        document.addEventListener("keydown", function (e) {
+            if (e.shiftKey)
+                _this.SHIFT = true;
+            if (e.ctrlKey)
+                _this.CTRL = true;
+        });
+        document.addEventListener("keyup", function (e) {
+            if (e.shiftKey)
+                _this.SHIFT = false;
+            if (e.ctrlKey)
+                _this.CTRL = false;
+        });
     };
     Clicks.click = function (id, link, redirect) {
         if (redirect === void 0) { redirect = false; }
@@ -190,6 +205,8 @@ var Clicks = /** @class */ (function () {
                 window.location.href = link;
         });
     };
+    Clicks.CTRL = false;
+    Clicks.SHIFT = false;
     return Clicks;
 }());
 /**
@@ -243,10 +260,18 @@ var LogoBloat = /** @class */ (function () {
         this.elm.addEventListener("mouseenter", function () { return _this.hovering = true; });
         this.elm.addEventListener("mouseleave", function () { return _this.hovering = false; });
     }
+    LogoBloat.prototype.getColor = function () {
+        var color = "";
+        if (this.elm.hasAttribute("data-logo-color-theme"))
+            color = this.elm.getAttribute("data-logo-color-theme");
+        else
+            color = Style().getPropertyValue("--bs-highlight");
+        return color;
+    };
     LogoBloat.prototype.blinkLoop = function () {
         var _this = this;
         var planetCores = this.elm.querySelectorAll(".planet-core");
-        var highlightColor = Style().getPropertyValue("--bs-highlight");
+        var highlightColor = this.getColor();
         var blinkingPlanetCores = new Set();
         var counter = 0;
         setInterval(function () {

@@ -22,9 +22,18 @@ class LogoBloat {
         this.elm.addEventListener("mouseleave", () => this.hovering = false);
     }
 
+    private getColor(){
+        let color = "";
+        if (this.elm.hasAttribute("data-logo-color-theme"))
+            color = this.elm.getAttribute("data-logo-color-theme");
+        else
+            color = Style().getPropertyValue("--bs-highlight");
+        return color;
+    }
+
     private blinkLoop(){
         const planetCores = this.elm.querySelectorAll(".planet-core");
-        const highlightColor = Style().getPropertyValue("--bs-highlight");
+        const highlightColor = this.getColor();
         const blinkingPlanetCores = new Set();
         let counter = 0;
         setInterval(() => {

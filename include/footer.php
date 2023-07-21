@@ -1,4 +1,4 @@
-<div class="p-2 d-inline-flex w-100 text-pink">
+<div class="p-2 d-inline-flex w-100 text-pink position-sticky top-100">
     <div class="w-100">
         <div class="text-start"></div>
     </div>

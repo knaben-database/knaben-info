@@ -13,3 +13,18 @@ body {
   background: linear-gradient(map-get($theme-colors, "pink"), map-get($theme-colors, "darkblue"));
   min-height: 100vh;
 }
+
+div.proxyBox{
+  @media (min-width: map-get($container-max-widths, "sm")) {
+    width: unset;
+  }
+  @media (min-width: map-get($container-max-widths, "lg")) {
+    width: 48%;
+  }
+  @media (min-width: map-get($container-max-widths, "xl")) {
+    width: 31%;
+  }
+  @media (min-width: map-get($container-max-widths, "xxl")) {
+    width: 23%;
+  }
+}

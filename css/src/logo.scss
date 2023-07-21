@@ -112,6 +112,13 @@
       top: 50%;
       border-radius: 50%;
       background-color: map-get($theme-colors, "highlight");
+      &.show-core {
+        left: 15% !important;
+        top: 15% !important;
+        width: 70% !important;
+        height: 70% !important;
+        background-color: map-get($theme-colors, "pink") !important;
+      }
     }
   }
 
@@ -130,15 +137,18 @@
       top: 25%;
     }
   }
-}
 
-.css-logo:hover {
-  .ball {
-     .core {
-       left: 15%;
-       top: 15%;
-       width: 70%;
-       height: 70%;
+  &:hover {
+    .ball {
+      .core {
+        left: 15%;
+        top: 15%;
+        width: 70%;
+        height: 70%;
+        &.show-core {
+          background-color: map-get($theme-colors, "highlight") !important;
+        }
+      }
     }
   }
 }

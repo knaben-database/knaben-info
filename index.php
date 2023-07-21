@@ -7,7 +7,9 @@ $TIMEMEASURE = microtime(TRUE);
     <meta charset="UTF-8">
     <title>Knaben's Proxy List</title>
     <link rel="icon" href="/favicon.ico">
-    <link rel="stylesheet" href="/css/style.css">
+    <meta name="description" content="Proxy for a various of websites, including our own. Only working proxies are shown">
+    <meta name="keywords" content="proxy, list, workaround, bypass, working, free, knaben"/>
+    <link rel="stylesheet" href="/css/style.css?v=<?= filemtime($_SERVER['DOCUMENT_ROOT'].'/css/style.css') ?>">
     <script src="/js/bootstrap.bundle.min.js"></script>
     <script src="/js/main.js?v=<?= filemtime($_SERVER['DOCUMENT_ROOT'].'/js/main.js') ?>"></script>
 </head>
@@ -15,7 +17,7 @@ $TIMEMEASURE = microtime(TRUE);
 <div class="m-auto mt-5" style="height: 350px;width: 350px;">
     <?php include "$_SERVER[DOCUMENT_ROOT]/include/logo.php" ?>
 </div>
-<h1 class="m-auto text-center text-darkblue fs-0">Knaben's Proxy List</h1>
+<div class="m-auto text-center text-darkblue fs-0">Knaben<div class="text-highlight d-inline">'</div>s Proxy List</div>
 <div class="d-flex justify-content-center">
     <div class="text-highlight mx-2 d-flex" data-bs-toggle="tooltip" title='Proxies and websites with this color are confirmed to be working'><div class="bg-highlight align-self-center me-1" style="height: 10px;width:10px"></div> Working</div>
     <div class="text-white mx-2 d-flex" data-bs-toggle="tooltip" title='Checking towards websites and proxies with this color may have been blocked. 403 Forbidden return code.'><div class="bg-white align-self-center me-1" style="height: 10px;width:10px"></div> Most likely working</div>
