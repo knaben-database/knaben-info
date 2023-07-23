@@ -1,6 +1,6 @@
 <div class="p-2 d-inline-flex w-100 text-pink position-sticky top-100">
     <div class="w-100">
-        <div class="text-start"></div>
+        <a class="text-start matrix-logo text-pink w-fit text-decoration-none d-block" href="https://matrix.to/#/#general:knaben.org">matrix</a>
     </div>
     <div class="w-100">
         <div class="text-center">Knaben Team ψ <?= date("Y") ?></div>

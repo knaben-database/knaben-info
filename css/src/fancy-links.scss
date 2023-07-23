@@ -10,17 +10,30 @@
       opacity: 0.8;
     }
   }
-  &.text-red > a {
-    color: map-get($theme-colors, "red");
+  &.text-red {
+    > a {
+      color: map-get($theme-colors, "red");
+    }
+
+    &::after {
+      background-color: map-get($theme-colors, "red");
+    }
   }
-  &.text-red::after {
-    background-color: map-get($theme-colors, "red");
+  &.text-white{
+    > a {
+      color: map-get($theme-colors, "white");
+    }
+    &::after {
+      background-color: map-get($theme-colors, "white");
+    }
   }
-  &.text-white > a {
-    color: map-get($theme-colors, "white");
-  }
-  &.text-white::after {
-    background-color: map-get($theme-colors, "white");
+  &.text-darkblue{
+    > a {
+      color: map-get($theme-colors, "darkblue");
+    }
+    &::after {
+      background-color: map-get($theme-colors, "darkblue");
+    }
   }
   &::after {
     transition-duration: 0.6s;
@@ -32,10 +45,14 @@
     left: 0;
     right: 0;
     bottom: 0;
+    pointer-events: none;
     margin: auto;
   }
   &:hover::after{
     content: '';
     width: 90%;
   }
+}
+h1.fancy-link::after {
+  height: 2px;
 }

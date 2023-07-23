@@ -1,0 +1,10 @@
+.matrix-logo {
+  position: relative; }
+  .matrix-logo::after {
+    content: '';
+    position: absolute;
+    width: 10%;
+    aspect-ratio: 1/1;
+    background-color: red; }
+
+/*# sourceMappingURL=matrix-logo.css.map */
