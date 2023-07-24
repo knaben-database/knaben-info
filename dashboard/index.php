@@ -14,12 +14,12 @@ $TIMEMEASURE = microtime(TRUE);
     <script src="/js/main.js?v=<?= filemtime($_SERVER['DOCUMENT_ROOT'].'/js/main.js') ?>"></script>
 </head>
 <body>
-<div class="container-lg c-m">
+<div class="container-lg dashboardBoxWrapper">
     <div class="m-auto text-center text-darkblue fs-0">Knaben<div class="text-highlight d-inline">'</div>s Dashboard</div>
-    <p class="text-center text-pink">The services we provide</p>
-    <div class="d-lg-flex d-grid justify-content-between">
+    <p class="text-center yeahyeayheayehaeyaheayehaok">The services we provide</p>
+    <div class="dashboardBox">
         <!-- Knaben proxy list -->
-        <div style="width: 25%;" class="mx-auto">
+        <div class="mx-auto dashboardItem">
             <div class="ratio-1x1 mx-3">
                 <?php include "$_SERVER[DOCUMENT_ROOT]/include/logo.php" ?>
             </div>
@@ -29,7 +29,7 @@ $TIMEMEASURE = microtime(TRUE);
             <p class="text-white text-opacity-50">Various pirate websites, information about their status and plenty of proxies to choose from</p>
         </div>
         <!-- Knaben.eu -->
-        <div style="width: 25%;" class="d-grid align-content-end overflow-hidden mx-auto">
+        <div class="d-grid align-content-end overflow-hidden mx-auto dashboardItem">
             <div class="mx-3">
                 <?php $ANIMATED_LOGO = true; include "$_SERVER[DOCUMENT_ROOT]/include/kd-logo.php" ?>
             </div>
@@ -39,7 +39,7 @@ $TIMEMEASURE = microtime(TRUE);
             <p class="text-white text-opacity-50">Knaben Database provides information from multiple trackers at once. Powerful caching search, Crawler, Database, all in one.</p>
         </div>
         <!-- Knaben.ru -->
-        <div style="width: 25%;" class="d-flex flex-column overflow-hidden mx-auto">
+        <div class="d-flex flex-column overflow-hidden mx-auto dashboardItem">
             <div class="mx-3 h-100 text-pink">
                 <svg width="100%" height="100%" viewBox="0 0 1000 836" xmlns="http://www.w3.org/2000/svg">
                     <g id="#000000ff">

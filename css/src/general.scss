@@ -28,3 +28,40 @@ div.proxyBox{
     width: 23%;
   }
 }
+
+div.dashboardBoxWrapper {
+  @media (min-width: map-get($container-max-widths, "sm")) {
+    margin-top: map-get($spacers, 5);
+    div.dashboardBox {
+      display: grid;
+      .dashboardItem {
+        width: 50%;
+        margin-bottom: map-get($spacers, 5);
+      }
+    }
+  }
+  @media (min-width: map-get($container-max-widths, "lg")) {
+    margin-top: unset;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    div.dashboardBox{
+      display: flex;
+      justify-content: space-between;
+      .dashboardItem {
+        width: 25%;
+      }
+    }
+  }
+}
+
+/* Yes */
+.yeahyeayheayehaeyaheayehaok{
+  @media (min-width: map-get($container-max-widths, "sm")) {
+    color: map-get($theme-colors, "darkblue");
+  }
+  @media (min-width: map-get($container-max-widths, "lg")) {
+    color: map-get($theme-colors, "pink");
+  }
+}

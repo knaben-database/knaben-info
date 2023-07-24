@@ -10418,6 +10418,35 @@ body {
   div.proxyBox {
     width: 23%; } }
 
+@media (min-width: 540px) {
+  div.dashboardBoxWrapper {
+    margin-top: 3rem; }
+    div.dashboardBoxWrapper div.dashboardBox {
+      display: grid; }
+      div.dashboardBoxWrapper div.dashboardBox .dashboardItem {
+        width: 50%;
+        margin-bottom: 3rem; } }
+@media (min-width: 960px) {
+  div.dashboardBoxWrapper {
+    margin-top: unset;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%); }
+    div.dashboardBoxWrapper div.dashboardBox {
+      display: flex;
+      justify-content: space-between; }
+      div.dashboardBoxWrapper div.dashboardBox .dashboardItem {
+        width: 25%; } }
+
+/* Yes */
+@media (min-width: 540px) {
+  .yeahyeayheayehaeyaheayehaok {
+    color: #00002a; } }
+@media (min-width: 960px) {
+  .yeahyeayheayehaeyaheayehaok {
+    color: #ffbcbe; } }
+
 .fancy-link {
   position: relative;
   width: fit-content;
