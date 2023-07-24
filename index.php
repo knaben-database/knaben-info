@@ -15,7 +15,7 @@ $TIMEMEASURE = microtime(TRUE);
 </head>
 <body>
 <div class="m-auto mt-5" style="height: 350px;width: 350px;">
-    <?php include "$_SERVER[DOCUMENT_ROOT]/include/logo.php" ?>
+    <?php $LOGO_CORE_HREF_LINK = "/dashboard"; include "$_SERVER[DOCUMENT_ROOT]/include/logo.php" ?>
 </div>
 <div class="m-auto text-center text-darkblue fs-0">Knaben<div class="text-highlight d-inline">'</div>s Proxy List</div>
 <div class="d-flex justify-content-center">

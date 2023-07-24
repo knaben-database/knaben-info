@@ -419,6 +419,7 @@ class PostgreSQL
                 break;
             case "json":
                 $item = json_decode($item, true);
+                if (count($item) == 1 && is_null($item[0])) $item = []; // If it looks like this [null]
                 break;
             case "string":
                 $item = (substr(trim($item), 0, 1) == '"' && substr(trim($item), -1) == '"') ? trim(trim($item), '"') : trim($item);

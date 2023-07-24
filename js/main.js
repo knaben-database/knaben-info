@@ -238,9 +238,66 @@ var BloatButCool = /** @class */ (function () {
             var logo = logos[i];
             new LogoBloat(logo);
         }
+        // Init kd logo bloat
+        KdLogoBloat.init();
     };
     return BloatButCool;
 }());
+var KdLogoBloat = (function () {
+    function initialize() {
+        var elms = document.querySelectorAll(".cssLogo.animated");
+        var _loop_2 = function (i) {
+            elms[i].style.transitionDuration = "0s";
+            spawnPos(elms[i]);
+            // Don't want to auto search right away
+            setTimeout(function () {
+                elms[i].style.transitionDuration = "";
+                animate(elms[i]);
+            }, 50);
+        };
+        for (var i = 0; i < elms.length; i++) {
+            _loop_2(i);
+        }
+    }
+    function spawnPos(elm) {
+        var layers = elm.getElementsByClassName("foredeck")[0].children;
+        for (var i = 0; i < layers.length; i++) {
+            var containers = layers[i].children;
+            for (var j = 0; j < containers.length; j++) {
+                containers[j].style.transform = "translate(0, -600px)";
+                containers[j].style.transitionDuration = "0s";
+            }
+        }
+        elm.style.opacity = "1";
+    }
+    function animate(elm) {
+        elm.style.opacity = "1";
+        elm.style.transform = "translate(0px)";
+        setTimeout(function () {
+            var layers = elm.getElementsByClassName("foredeck")[0].children;
+            var _loop_3 = function (i) {
+                var containers = layers[i].children;
+                var _loop_4 = function (j) {
+                    containers[j].style.transition = "all cubic-bezier(0.5, 0.25, 0.27, 0.1) 1s";
+                    setTimeout(function () {
+                        containers[j].style.transform = "translate(0)";
+                    }, 50 * (j - containers.length) * (i - layers.length));
+                };
+                for (var j = 0; j < containers.length; j++) {
+                    _loop_4(j);
+                }
+            };
+            for (var i = 0; i < layers.length; i++) {
+                _loop_3(i);
+            }
+        }, 2000);
+    }
+    // Here you can set what to be public
+    return {
+        // Name : Function
+        init: initialize
+    };
+})();
 var LogoBloat = /** @class */ (function () {
     function LogoBloat(elm) {
         var _this = this;
@@ -262,7 +319,7 @@ var LogoBloat = /** @class */ (function () {
     }
     LogoBloat.prototype.getColor = function () {
         var color = "";
-        if (this.elm.hasAttribute("data-logo-color-theme"))
+        if (this.elm.hasAttribute("data-logo-color-theme") && this.elm.getAttribute("data-logo-color-theme").trim() !== "")
             color = this.elm.getAttribute("data-logo-color-theme");
         else
             color = Style().getPropertyValue("--bs-highlight");

@@ -24,7 +24,7 @@ class LogoBloat {
 
     private getColor(){
         let color = "";
-        if (this.elm.hasAttribute("data-logo-color-theme"))
+        if (this.elm.hasAttribute("data-logo-color-theme") && this.elm.getAttribute("data-logo-color-theme").trim() !== "")
             color = this.elm.getAttribute("data-logo-color-theme");
         else
             color = Style().getPropertyValue("--bs-highlight");

@@ -40,6 +40,14 @@ if (!$websites || count($websites) > 1) {
  *   categories: string[],
  *   clicks: int,
  *   clicks_last_24h: int,
+ *   comments: array{array{
+ *      id: int,
+ *      content: string,
+ *      identifier: string,
+ *      proxy_id: int|null,
+ *      web_id: int|null,
+ *      time: DateTimeImmutable
+ *   }},
  *   proxies: array{array{
  *      id: int,
  *      web_id: int,
@@ -194,6 +202,19 @@ $updatedMins = round(((new DateTimeImmutable())->getTimestamp() - $lastChecked->
             <i class="p-2 text-white d-block text-center text-opacity-50">No proxies are working?</i>
         <?php endif; ?>
     </div>
+    <?php if (count($website["comments"]) > 0): ?>
+    <br/>
+    <h3 class="text-opacity-50 text-darkblue">Comments</h3>
+    <div class="p-2 bg-darkblue bg-opacity-25">
+    <?php foreach ($website["comments"] as $comment): ?>
+        <div class="d-flex">
+            <div class="text-pink px-2 text-opacity-100"><?= $comment["identifier"] ?></div>
+            <div class="text-white"><?= $comment["content"] ?></div>
+            <div class="text-white text-opacity-50 ms-auto"><?= $comment["time"]->format("Y-m-d") ?></div>
+        </div>
+        <?php endforeach; ?>
+    </div>
+    <?php endif; ?>
 </div>
 <?php include_once "$_SERVER[DOCUMENT_ROOT]/include/footer.php" ?>
 </body>

@@ -58,7 +58,8 @@ class Websites
             w.last_checked,
             COALESCE(cats.names, '[]') as categories,
             COUNT(c.proxy_id) as clicks,
-            COUNT(CASE WHEN c.time >= NOW() - INTERVAL '24 HOURS' THEN c.proxy_id END) as clicks_last_24h
+            COUNT(CASE WHEN c.time >= NOW() - INTERVAL '24 HOURS' THEN c.proxy_id END) as clicks_last_24h,
+            jsonb_agg(DISTINCT c2) as comments
         FROM
             website w
         LEFT JOIN (
@@ -72,6 +73,7 @@ class Websites
         ) cats ON cats.web_id = w.id
         LEFT JOIN proxy_list pl ON pl.web_id = w.id
         LEFT JOIN clicks c ON c.proxy_id = pl.id
+        LEFT JOIN comments c2 on c2.web_id = pl.web_id
         $WHERE
         GROUP BY
             w.id, cats.names
@@ -86,7 +88,9 @@ class Websites
                 "added_time::datetime",
                 "last_active::datetime",
                 "last_checked::datetime",
-                "categories::string[]"
+                "categories::string[]",
+                "comments::json",
+                "comments..time::datetime"
             ],
             "cache" => [
                 "name" => "websites_cache_" . md5(json_encode($id)),
@@ -200,6 +204,14 @@ class Websites
      *   categories: string[],
      *   clicks: int,
      *   clicks_last_24h: int,
+     *   comments: array{array{
+     *      id: int,
+     *      content: string,
+     *      identifier: string,
+     *      proxy_id: int|null,
+     *      web_id: int|null,
+     *      time: DateTimeImmutable
+     *   }},
      *   proxies: array{array{
      *      id: int,
      *      web_id: int,

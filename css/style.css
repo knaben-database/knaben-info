@@ -10221,6 +10221,8 @@ textarea.form-control-lg {
         width: 70% !important;
         height: 70% !important;
         background-color: #ffbcbe !important; }
+    .css-logo > .ball > a.core:hover {
+      opacity: 0.7; }
   .css-logo .planet {
     position: absolute;
     border-radius: 50%;
@@ -10241,6 +10243,101 @@ textarea.form-control-lg {
     height: 70%; }
     .css-logo:hover .ball .core.show-core {
       background-color: #00ff72 !important; }
+
+/* Knaben Database logo in css */
+.grey1 {
+  /*background-color: mix(map-get($theme-colors, "pink"), #bababa);*/
+  background-color: #ffbcbe; }
+
+.grey2 {
+  background-color: #3d3d52; }
+
+div.cssLogo {
+  aspect-ratio: 1862 / 804;
+  position: relative;
+  height: 100%;
+  margin: auto;
+  left: 0;
+  right: 0; }
+
+div.cssLogo.animated {
+  opacity: 0;
+  transition-duration: 2s;
+  transition-timing-function: cubic-bezier(0.5, 0.25, 0.27, 1.1); }
+
+div.cssLogo * {
+  position: absolute; }
+
+div.cssLogo div.housing {
+  left: 4%;
+  width: 22.2%;
+  height: 29%; }
+
+div.cssLogo div.deck {
+  left: 4%;
+  width: 27%;
+  height: 17.5%;
+  top: 29%; }
+
+div.cssLogo div.hull {
+  width: 100%;
+  height: 51%;
+  top: 48.75%;
+  overflow: hidden; }
+
+div.cssLogo div.hull div.hull1 {
+  width: 100%;
+  height: 61.5%;
+  overflow: hidden; }
+
+div.cssLogo div.hull div.hull1 div.tail.grey1 {
+  width: 18%;
+  height: 88%;
+  transform: rotate(67deg); }
+
+div.cssLogo div.hull div.hull1 div.bow.grey1 {
+  width: 22%;
+  height: 88%;
+  transform: rotate(135deg);
+  left: 80%; }
+
+div.cssLogo div.hull div.hull2 {
+  width: 100%;
+  height: 39%;
+  top: 61%;
+  overflow: hidden; }
+
+div.cssLogo div.hull div.hull2 div.tail.grey2 {
+  width: 23%;
+  height: 90%;
+  transform: rotate(67deg); }
+
+div.cssLogo div.hull div.hull2 div.bow.grey2 {
+  width: 22%;
+  height: 88%;
+  transform: rotate(135deg);
+  left: 71.9%; }
+
+div.cssLogo div.foredeck {
+  width: 59%;
+  height: 41.5%;
+  top: 5%;
+  left: 35.1%; }
+
+div.cssLogo div.foredeck div.layer1 {
+  width: 80.2%;
+  height: 30.5%;
+  left: 10%; }
+
+div.cssLogo div.foredeck div.layer2 {
+  width: 100%;
+  top: 36%;
+  height: 29%; }
+
+div.cssLogo div.foredeck div.layer3 {
+  width: 100%;
+  top: 70%;
+  height: 30%; }
 
 .matrix-logo {
   position: relative; }
@@ -10290,6 +10387,12 @@ textarea.form-control-lg {
   -ms-text-overflow: ellipsis;
   -o-text-overflow: ellipsis; }
 
+.ratio-1x1 {
+  aspect-ratio: 1/1; }
+
+.ratio-2x1 {
+  aspect-ratio: 2/1; }
+
 ::selection {
   background: #00ff72;
   color: #fff; }
@@ -10337,6 +10440,10 @@ body {
     color: #00002a; }
   .fancy-link.text-darkblue::after {
     background-color: #00002a; }
+  .fancy-link.text-pink > a {
+    color: #ffbcbe; }
+  .fancy-link.text-pink::after {
+    background-color: #ffbcbe; }
   .fancy-link::after {
     transition-duration: 0.6s;
     content: '';

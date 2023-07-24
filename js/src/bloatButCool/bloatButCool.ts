@@ -9,5 +9,8 @@ class BloatButCool {
             const logo = logos[i] as HTMLDivElement;
             new LogoBloat(logo);
         }
+
+        // Init kd logo bloat
+        KdLogoBloat.init();
     }
 }
