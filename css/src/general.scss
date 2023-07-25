@@ -40,7 +40,7 @@ div.dashboardBoxWrapper {
       }
     }
   }
-  @media (min-width: map-get($container-max-widths, "lg")) {
+  @media (min-width: map-get($container-max-widths, "xl")) {
     margin-top: unset;
     position: absolute;
     left: 50%;
@@ -61,7 +61,7 @@ div.dashboardBoxWrapper {
   @media (min-width: map-get($container-max-widths, "sm")) {
     color: map-get($theme-colors, "darkblue");
   }
-  @media (min-width: map-get($container-max-widths, "lg")) {
+  @media (min-width: map-get($container-max-widths, "xl")) {
     color: map-get($theme-colors, "pink");
   }
 }

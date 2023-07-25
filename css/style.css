@@ -10426,7 +10426,7 @@ body {
       div.dashboardBoxWrapper div.dashboardBox .dashboardItem {
         width: 50%;
         margin-bottom: 3rem; } }
-@media (min-width: 960px) {
+@media (min-width: 1140px) {
   div.dashboardBoxWrapper {
     margin-top: unset;
     position: absolute;
@@ -10443,7 +10443,7 @@ body {
 @media (min-width: 540px) {
   .yeahyeayheayehaeyaheayehaok {
     color: #00002a; } }
-@media (min-width: 960px) {
+@media (min-width: 1140px) {
   .yeahyeayheayehaeyaheayehaok {
     color: #ffbcbe; } }
 
