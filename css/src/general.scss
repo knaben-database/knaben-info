@@ -3,6 +3,11 @@
   color: #fff;
 }
 
+* {
+  scrollbar-color: map-get($theme-colors, "highlight") map-get($theme-colors, "darkblue") !important;
+  scrollbar-width: thin;
+}
+
 @font-face {
   font-family: "MuktaMalar";
   src: url("/fonts/MuktaMalar-Regular.woff2");
