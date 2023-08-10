@@ -19,9 +19,21 @@ $websites = $web->getEverything();
  */
 $lastChecked = $websites[0]["last_checked"];
 $updatedMins = round(((new DateTimeImmutable())->getTimestamp() - $lastChecked->getTimestamp())/60);
+if (0 >= $updatedMins)
+    $updatedTitle = "Updated now";
+else
+    $updatedTitle = "Updated {$updatedMins}m ago";
+$updatedDescription = $lastChecked->format("Y-m-d H:i:sT");
+$updatedColor = colorsBetweenOffset("#00002A", "#FF0000", $web::MIN_UPDATE_MINS, $web::MAX_UPDATE_MINS, $updatedMins) . "C8"; // RRGGBBAA
+if ($updatedMins > $web::MAX_UPDATE_MINS)
+    $updatedDescription .= " More than " . $web::MAX_UPDATE_MINS . "m has passed since last check. Script might have died!";
 ?>
-    <div class="position-absolute top-0 end-0 pe-4 text-darkblue text-opacity-75" data-bs-toggle="tooltip" title="<?= $lastChecked->format("Y-m-d H:i:sT") ?>" style="transform: translateY(-100%);">
-        <?= 0 >= $updatedMins ? "Updated now" : "Updated {$updatedMins}m ago" ?>
+    <div
+        class="position-absolute top-0 end-0 pe-4"
+        data-bs-toggle="tooltip"
+        title="<?= $updatedDescription ?>"
+        style="transform: translateY(-100%);color: <?= $updatedColor ?>">
+        <?= $updatedTitle ?>
     </div>
 <?php
 

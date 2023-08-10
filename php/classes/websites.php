@@ -11,8 +11,11 @@ require_once ($_SERVER['DOCUMENT_ROOT'].'/php/classes/PostgreSQL.php');
 class Websites
 {
     // Settings
-    public const MAX_TIMEOUT = 6.0; //s
-    public const MIN_TIMEOUT = 0.3; //s
+    public const MAX_TIMEOUT = 6.0; // s
+    public const MIN_TIMEOUT = 0.3; // s
+
+    public const MAX_UPDATE_MINS = 720; // 12 hours
+    public const MIN_UPDATE_MINS = 100; // ~1 hour
 
     private static $instance;
     public static function init()
