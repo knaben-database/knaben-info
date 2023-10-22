@@ -1,4 +1,4 @@
-#[derive(Serialize)]
+#[derive(Serialize, Debug)]
 pub struct Logo {
     color_theme: String,
     core_href_link: Option<String>,

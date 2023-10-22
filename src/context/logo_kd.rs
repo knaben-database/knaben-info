@@ -1,4 +1,4 @@
-#[derive(Serialize)]
+#[derive(Serialize, Debug)]
 pub struct LogoKd {
     animate: bool,
 }

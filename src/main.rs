@@ -1,6 +1,7 @@
 use rocket_dyn_templates::Template;
-use std::collections::HashMap;
 use rocket::fs::FileServer;
+use rocket_db_pools::{deadpool_postgres, Connection, Database};
+use sqlx::Connection as OtherConnection;
 
 #[macro_use] extern crate rocket;
 #[macro_use] extern crate serde_derive;
@@ -11,6 +12,13 @@ use context::logo::Logo;
 
 mod context;
 mod utils;
+mod db;
+mod models;
+
+
+#[derive(Database)]
+#[database("knabeninfo")]
+pub struct Db(deadpool_postgres::Pool);
 
 
 // Make the favicon appear to be served from root
@@ -20,17 +28,23 @@ static_response_handler! {
 
 
 #[get("/")]
-fn index() -> Template {
+async fn index(db: &Db) -> Template {
     let mut cxt = context::Sorts::new("Rocket");
-    let logo = Logo::new().core_href_link("/dashboard");
-    cxt.logo = Some(logo);
+
+    // Acquire a connection from the pool
+    let conn = db.get().await.unwrap();
+    let websites_with_clicks = db::get_websites_with_clicks(&conn);
+
+    cxt.logo = Some(Logo::new().core_href_link("/dashboard"));
+    cxt.elapsed();
     Template::render("index", &cxt)
 }
 
 #[get("/website")]
 fn website() -> Template
 {
-    let cxt = context::Sorts::new("Website");
+    let mut cxt = context::Sorts::new("Website");
+    cxt.elapsed();
     Template::render("website", &cxt)
 }
 
@@ -39,6 +53,7 @@ fn dashboard() -> Template {
     let mut cxt = context::Sorts::new("Dashboard");
     cxt.logo = Some(Logo::new());
     cxt.logo_kd = Some(LogoKd::new().animate(true));
+    cxt.elapsed();
     Template::render("dashboard", &cxt)
 }
 
@@ -46,6 +61,7 @@ fn dashboard() -> Template {
 fn rocket() -> _ {
     rocket::build()
         .attach(Template::fairing())
+        .attach(Db::init())
         .attach(static_resources_initializer!(
             "favicon" => "static/img/favicon.ico"
         ))
