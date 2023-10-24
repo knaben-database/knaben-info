@@ -1,0 +1,43 @@
+{{!--
+  In this PHP file you can tune how the logo looks by setting the different variables before including the logo.php file.
+  @var $LOGO_CORE_MESSAGE string|null Show a text within the core of the logo
+  @var $LOGO_SHOW_CORE bool|null Whenever to show the core in the middle, without any hover effect
+  @var $LOGO_COLOR_THEME string|null Set a color like "red", "green" etc...
+  @var $LOGO_CORE_HREF_LINK string|null Set a href when clicking the core
+--}}
+
+<div class="css-logo position-relative" data-logo-color-theme="{{color_theme}}">
+    <div class="outer-ring">
+        <div class="planet">
+            <div class="planet-core"></div>
+        </div>
+        <div class="ring"></div>
+    </div>
+    <div class="middle-ring">
+        <div class="planet">
+            <div class="planet-core"></div>
+        </div>
+        <div class="ring"></div>
+    </div>
+    <div class="inner-ring">
+        <div class="planet">
+            <div class="planet-core"></div>
+        </div>
+        <div class="ring"></div>
+    </div>
+    <div class="ball">
+        {{#if core_href_link}}
+            <a href="{{core_href_link}}" class="core{{#if show_core}} show-core{{/if}}" style="{{#if color_theme}}background-color:{{color_theme}} !important;{{/if}}">
+                {{#if core_message}}
+                    <div class="text-darkblue fs-1 fw-bolder position-absolute c-m">{{core_message}}</div>
+                {{/if}}
+            </a>
+        {{else}}
+            <div class="core{{#if show_core}} show-core{{/if}}" style="{{#if color_theme}}background-color:{{color_theme}} !important;{{/if}}">
+                {{#if core_message}}
+                    <div class="text-darkblue fs-1 fw-bolder position-absolute c-m">{{core_message}}</div>
+                {{/if}}
+            </div>
+        {{/if}}
+    </div>
+</div>

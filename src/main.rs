@@ -1,84 +1,73 @@
-#[macro_use]
-extern crate rocket;
+use rocket_dyn_templates::Template;
+use rocket::fs::FileServer;
+use rocket_db_pools::{deadpool_postgres, Connection, Database};
+use sqlx::Connection as OtherConnection;
 
-use rocket::{State};
-use serde;
+#[macro_use] extern crate rocket;
+#[macro_use] extern crate serde_derive;
+#[macro_use] extern crate rocket_include_static_resources;
 
-use std::{io::ErrorKind, sync::Arc};
-use surrealdb::{sql::Object};
+use context::logo_kd::LogoKd;
+use context::logo::Logo;
 
-use crate::db::{AffectedRows, DB};
-
-use cors::*;
-
-mod db;
-mod error;
-mod prelude;
+mod context;
 mod utils;
-mod cors;
+mod db;
+mod models;
 
-#[post("/task/<title>")]
-async fn add_task(title: String, db: &State<DB>) -> Result<Json<Object>, std::io::Error> {
-    let task = db
-        .add_task(title)
-        .await
-        .map_err(|_| std::io::Error::new(ErrorKind::Other, "Unable to create task."))?;
 
-    Ok(Json(task))
+#[derive(Database)]
+#[database("knabeninfo")]
+pub struct Db(deadpool_postgres::Pool);
+
+
+// Make the favicon appear to be served from root
+static_response_handler! {
+    "/favicon.ico" => favicon => "favicon",
 }
 
-#[get("/task/<id>")]
-async fn get_task(id: String, db: &State<DB>) -> Result<Json<Object>, std::io::Error> {
-    let task = db
-        .get_task(id)
-        .await
-        .map_err(|_| std::io::Error::new(ErrorKind::Other, "Unable to fetch task."))?;
 
-    Ok(Json(task))
+#[get("/")]
+async fn index(db: &Db) -> Template {
+    let mut cxt = context::Sorts::new("Rocket");
+
+    // Acquire a connection from the pool
+    let conn = db.get().await.unwrap();
+    let websites_with_clicks = db::get_websites_with_clicks(&conn);
+
+    cxt.logo = Some(Logo::new().core_href_link("/dashboard"));
+    cxt.elapsed();
+    Template::render("index", &cxt)
 }
 
-#[get("/tasks")]
-async fn get_all_tasks(db: &State<DB>) -> Result<Json<Vec<Object>>, std::io::Error> {
-    let tasks = db
-        .get_all_tasks()
-        .await
-        .map_err(|_| std::io::Error::new(ErrorKind::Other, "Unable to fetch all tasks."))?;
-
-    Ok(Json(tasks))
+#[get("/website")]
+fn website() -> Template
+{
+    let mut cxt = context::Sorts::new("Website");
+    cxt.elapsed();
+    Template::render("website", &cxt)
 }
 
-#[patch("/task/<id>")]
-async fn toggle_task(id: String, db: &State<DB>) -> Result<Json<AffectedRows>, std::io::Error> {
-    let affected_rows = db
-        .toggle_task(id)
-        .await
-        .map_err(|e| std::io::Error::new(ErrorKind::Other, e.to_string()))?;
-
-    Ok(Json(affected_rows))
-}
-
-#[delete("/task/<id>")]
-async fn delete_task(id: String, db: &State<DB>) -> Result<Json<AffectedRows>, std::io::Error> {
-    let affected_rows = db
-        .delete_task(id)
-        .await
-        .map_err(|_| std::io::Error::new(ErrorKind::Other, "Unable to delete task."))?;
-
-    Ok(Json(affected_rows))
+#[get("/dashboard")]
+fn dashboard() -> Template {
+    let mut cxt = context::Sorts::new("Dashboard");
+    cxt.logo = Some(Logo::new());
+    cxt.logo_kd = Some(LogoKd::new().animate(true));
+    cxt.elapsed();
+    Template::render("dashboard", &cxt)
 }
 
 #[launch]
-async fn rocket() -> _ {
-    let ds = Arc::new(Datastore::new("memory").await.unwrap());
-    let sesh = Session::for_db("my_ns", "my_db");
-
-    let db = DB { ds, sesh };
-
+fn rocket() -> _ {
     rocket::build()
-        .mount(
-            "/",
-            routes![add_task, get_task, get_all_tasks, toggle_task, delete_task],
-        )
-        .attach(CORS)
-        .manage(db)
+        .attach(Template::fairing())
+        .attach(Db::init())
+        .attach(static_resources_initializer!(
+            "favicon" => "static/img/favicon.ico"
+        ))
+        .mount("/", routes![favicon])
+        .mount("/", routes![index, dashboard, website])
+
+        // Serve the static files
+        .mount("/static", FileServer::from("static"))
 }
