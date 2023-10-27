@@ -19,9 +19,9 @@ class PostgreSQL
      * The function to get the password
      * @return string
      */
-    private static function psswd() : string {
-        $value1 = "aRUO4FqJ1KuMDsaLWBpQXA==";
-        $value2 = "LWpDn4gMiPquvfqCcQYxng==";
+    public static function psswd() : string {
+        $value1 = "D9NbOuKun9uvC/O4LTd/Jw==";
+        $value2 = "bI9d/orbhKz4Otb2ppGG5A==";
         $keys = file_get_contents('/home/***REMOVED***/Documents/psswd_keys.txt');
         $key1 = trim(explode("\n", $keys)[0]);
         $key2 = trim(explode("\n", $keys)[1]);
@@ -29,6 +29,7 @@ class PostgreSQL
         $psswd1 = strtolower(strrev($psswd1));
         $psswd2 = openssl_decrypt($value2,"AES-128-ECB", $key2);
         $psswd2 = strtolower(strrev($psswd2));
+
         return salt($psswd1, $psswd2);
     }
 
