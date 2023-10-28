@@ -1,0 +1,57 @@
+{{#each db.websites_with_clicks}}
+    <div class="bg-darkblue bg-opacity-75 p-3 mx-2 my-4 position-relative proxyBox">
+        <div>
+            <div class="d-flex w-100">
+                <div class="w-100 d-grid">
+                    <div class="fancy-link z-2 ">
+                        <a title="The official link" href="{{url}}">{{url}}</a>
+                    </div>
+                    <div>
+                    </div>
+                </div>
+                <div style="color: #ffadad" class="d-inline-flex ms-auto">Ping:&nbsp;{{ping}}s</div>
+            </div>
+            <h1 class="text-white mb-0 fancy-link">
+                <a title="More info" href="/website/the-pirate-bay">{{name}}</a>
+            </h1>
+        </div>
+        <div class="d-flex flex-wrap">
+            {{#each categories}}
+                <div class="fs-7 px-2 me-2 mb-2 bg-white text-pink bg-opacity-25">{{ this }}</div>
+            {{/each}}
+        </div>
+        <table class="mt-2 w-100 text-nowrap" style="table-layout: fixed">
+            <colgroup>
+                <col style="width: auto">
+                <col style="width: 76px;">
+                <col style="width: 55px;">
+                <col style="width: 47px;">
+            </colgroup>
+            <thead>
+            <tr class="text-pink bg-white bg-opacity-25">
+                <th class="px-2">Link</th>
+                <th class="px-2 text-center w-min">Clicks 24h</th>
+                <th class="px-2 text-center w-min">Clicks</th>
+                <th class="px-2 text-center w-min">Ping</th>
+            </tr>
+            </thead>
+            <tbody>
+            {{#each proxy_list}}
+                <tr class="border-top border-white border-opacity-25">
+                    <!--class="fs-7 px-2 me-2 mb-2 bg-white text-pink bg-opacity-25"-->
+                    <th>
+                        <div class="position-relative">
+                            <div class="fancy-link mw-100 text-overflow-ellipsis " title="{{url}}">
+                                <a href="{{url}}" class="proxy-link" data-proxy-id="{{id}}">{{url}}</a>
+                            </div>
+                        </div>
+                    </th>
+                    <th class="text-center text-white text-opacity-50 w-min">{{clicks_last_24h}}</th>
+                    <th class="text-center text-white text-opacity-50 w-min">{{clicks}}</th>
+                    <th style="color: #ffffff" class="text-center w-min">{{ping}}s</th>
+                </tr>
+            {{/each}}
+            </tbody>
+        </table>
+    </div>
+{{/each}}

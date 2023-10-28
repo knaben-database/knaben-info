@@ -23,9 +23,13 @@
     <div class="text-darkblue text-opacity-50 mx-2 d-flex" data-bs-toggle="tooltip" title='Proxies that are not working will be hidden'><div class="border border-darkblue border-opacity-50 align-self-center me-1" style="height: 10px;width:10px"></div> (Down proxies gets hidden)</div>
 </div>
 <hr class="mx-5"/>
-<div class="m-4 d-flex flex-wrap justify-content-around position-relative">
-    {{> partials/lists}}
-</div>
+{{#if db}}
+{{#if db.websites_with_clicks}}
+    <div class="m-4 d-flex flex-wrap justify-content-around position-relative">
+        {{> partials/lists}}
+    </div>
+{{/if}}
+{{/if}}
 {{> partials/footer}}
 </body>
 </html>

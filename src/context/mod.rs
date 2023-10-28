@@ -1,10 +1,13 @@
 use chrono::prelude::*;
 use serde::Serialize;
 use std::time::Instant;
+use std::collections::HashSet;
+use std::error::Error;
 
-use super::utils;
+use super::{db, utils};
 use logo::Logo;
 use logo_kd::LogoKd;
+use crate::db::WebsitesWithProxiesAndClicks;
 
 pub mod logo;
 pub mod logo_kd;
@@ -32,6 +35,22 @@ impl DateTimeComponents {
     }
 }
 
+pub enum Query {
+    WebsitesWithClicks,
+    RecentWebsites,
+    ProxyList,
+}
+
+#[derive(Serialize, Default, Debug)]
+pub struct QueryResults {
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub websites_with_clicks: Option<Vec<WebsitesWithProxiesAndClicks>>,
+    // #[serde(skip_serializing_if = "Option::is_none")]
+    // pub recent_websites: Option<Vec<RecentWebsites>>,
+    // #[serde(skip_serializing_if = "Option::is_none")]
+    // pub proxy_list: Option<Vec<ProxyList>>,
+}
+
 #[derive(Serialize, Debug)]
 pub struct Sorts {
     pub name: String,
@@ -45,6 +64,8 @@ pub struct Sorts {
     pub logo: Option<Logo>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub logo_kd: Option<LogoKd>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub db: Option<QueryResults>
 }
 
 impl Sorts {
@@ -57,9 +78,25 @@ impl Sorts {
             start_load_time: Instant::now(),
             load_time: None,
             logo: None,
-            logo_kd: None
+            logo_kd: None,
+            db: None
         }
     }
+
+    pub fn db(mut self, query: Query) -> Self {
+        let something = match query {
+            Query::WebsitesWithClicks => {
+                match db::get_websites_with_clicks() {
+                    Ok(websites) => QueryResults { websites_with_clicks: Some(websites), ..Default::default() },
+                    Err(_) => panic!("dead")
+                }
+            },
+            _ => todo!("Not implemented yet")
+        };
+        self.db = Some(something);
+        self
+    }
+
 
     pub fn elapsed(&mut self) {
         self.load_time = Some(self.start_load_time.elapsed().as_nanos() as f64 / 1000000.0);

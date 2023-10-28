@@ -1,10 +1,20 @@
+use std::env;
 use chrono::{DateTime, NaiveDateTime, Utc};
-use rocket_db_pools::deadpool_postgres;
-use rocket_db_pools::deadpool_postgres::GenericClient;
-use sqlx::error::DatabaseError;
-use crate::Db;
+use diesel::{Connection, PgConnection};
+use diesel::prelude::*;
+use dotenvy::dotenv;
+use crate::db::schema::front_page::dsl::front_page;
+use crate::models::Website;
 
-mod schema;
+pub mod schema;
+
+fn establish_connection() -> PgConnection {
+    dotenv().ok();
+
+    let database_url = env::var("DATABASE_URL").expect("DATABASE_URL must be set");
+    PgConnection::establish(&database_url)
+        .unwrap_or_else(|_| panic!("Error connecting to {database_url}"))
+}
 
 struct Comment {
     id: i32,
@@ -33,10 +43,13 @@ struct ProxyList {
     clicks: u64
 }
 
-struct WebsitesWithProxiesAndClicks {
+#[derive(Queryable, Selectable, Insertable, Serialize, Debug, Clone)]
+#[diesel(table_name = crate::db::schema::front_page)]
+#[diesel(check_for_backend(diesel::pg::Pg))]
+pub struct WebsitesWithProxiesAndClicks {
     id: i32,
     name: String,
-    description: String,
+    description: Option<String>,
     url: String,
     ping: f64,
     return_code: i32,
@@ -45,122 +58,35 @@ struct WebsitesWithProxiesAndClicks {
     added_time: NaiveDateTime,
     last_active: NaiveDateTime,
     last_checked: NaiveDateTime,
-    categories: Vec<String>,
-    clicks: u64,
-    clicks_last_24h: u64,
-    proxy_list: Vec<ProxyList>,
-    comments: Vec<Comment>
+    categories: serde_json::Value,
+    clicks: i64,
+    clicks_last_24h: i64,
+    proxy_list: serde_json::Value,
+    comments: serde_json::Value
 }
 
-pub async fn get_websites_with_clicks(client: &deadpool_postgres::Client) -> Result<Vec<WebsitesWithProxiesAndClicks>, Box<dyn std::error::Error>> {
-    let stmt = client.prepare(
-        r#"
-        SELECT
-            w.id,
-            w.name,
-            w.description,
-            w.url,
-            w.ping,
-            w.return_code,
-            w.up,
-            w.test_reason,
-            w.added_time,
-            w.last_active,
-            w.last_checked,
-            COALESCE(cats.names, '[]') as categories,
-            COUNT(c.proxy_id) as clicks,
-            COUNT(CASE WHEN c.time >= NOW() - INTERVAL '24 HOURS' THEN c.proxy_id END) as clicks_last_24h,
-            COALESCE(pl.proxy_list, '[]') as proxy_list,
-            COALESCE(cmt.comments, '[]') as comments
-        FROM
-            website w
-        LEFT JOIN (
-            SELECT
-                jsonb_agg(cat.name) as names,
-                wc.web_id
-            FROM
-                categories cat
-            INNER JOIN website_categories wc on cat.id = wc.cat_id
-            GROUP BY wc.web_id
-        ) cats ON cats.web_id = w.id
-        LEFT JOIN proxy_list pl2 ON pl2.web_id = w.id
-        LEFT JOIN clicks c ON c.proxy_id = pl2.id
-        LEFT JOIN (
-            SELECT
-                web_id,
-                jsonb_agg(row_to_json(c)) as comments
-            FROM (
-                SELECT *
-                FROM comments
-                ORDER BY "time" DESC
-                LIMIT 5
-            ) c
-            GROUP BY web_id
-        ) cmt ON cmt.web_id = w.id
-        LEFT JOIN (
-            SELECT
-                web_id,
-                jsonb_agg(row_to_json(pl2) ORDER BY clicks_last_24h DESC) as proxy_list
-            FROM (
-                SELECT
-                    id,
-                    web_id,
-                    url,
-                    official,
-                    ping,
-                    return_code,
-                    up,
-                    test_reason,
-                    added_time,
-                    last_active,
-                    last_checked,
-                    COUNT(c.proxy_id) clicks,
-                    COUNT(CASE WHEN c.time >= NOW() - INTERVAL '24 HOURS' THEN c.proxy_id END) as clicks_last_24h
-                FROM proxy_list pl3
-                LEFT JOIN clicks c on pl3.id = c.proxy_id
-                WHERE
-                    up = True OR
-                    return_code = 403 OR
-                    return_code = 401
-                GROUP BY pl3.id
-                ORDER BY clicks_last_24h DESC
-            ) pl2
-            GROUP BY web_id
-        ) pl ON pl.web_id = w.id
-        GROUP BY
-            w.id, cats.names, pl.proxy_list, cmt.comments
-        ORDER BY
-            clicks DESC;
+pub fn get_websites_with_clicks() -> Result<Vec<WebsitesWithProxiesAndClicks>, Box<dyn std::error::Error>> {
+    use schema::front_page::dsl::*;
 
-        "#)
-        .await?;
+    let conn = &mut establish_connection();
 
-    let rows = client.query(&stmt, &[]).await?;
+    let results: Vec<WebsitesWithProxiesAndClicks> = front_page
+        .select(WebsitesWithProxiesAndClicks::as_select())
+        .load(conn)?;
 
-    let mut websites = Vec::new();
+    Ok(results)
+}
 
-    for row in rows {
-        let website = WebsitesWithProxiesAndClicks {
-            id: row.get("id"),
-            name: row.get("name"),
-            description: row.get("description"),
-            url: row.get("url"),
-            ping: row.get("ping"),
-            return_code: row.get("return_code"),
-            up: row.get("up"),
-            test_reason: row.get("test_reason"),
-            added_time: row.get("added_time"),
-            last_active: row.get("last_active"),
-            last_checked: row.get("last_checked"),
-            categories: serde_json::from_value(row.get("categories"))?,
-            clicks: row.get("clicks"),
-            clicks_last_24h: row.get("clicks_last_24h"),
-            proxy_list: serde_json::from_value(row.get("proxy_list"))?,
-            comments: serde_json::from_value(row.get("comments"))?,
-        };
+pub fn get_websites() -> Vec<Website> {
+    use schema::website::dsl::*;
 
-        websites.push(website);
-    }
+    let conn = &mut establish_connection();
 
-    Ok(websites)
+    let results: Vec<Website> = website
+        .limit(5)
+        .select(Website::as_select())
+        .load(conn)
+        .expect("Error loading posts with usernames");
+
+    results
 }

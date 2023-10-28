@@ -1,7 +1,10 @@
-use chrono::{DateTime};
-use sqlx;
+use chrono::{DateTime, NaiveDateTime};
+use diesel::{AsChangeset, Insertable, Queryable, Selectable};
+use diesel::prelude::*;
 
-#[derive(sqlx::FromRow, Debug)]
+#[derive(Queryable, Selectable, Insertable, AsChangeset, Debug, Clone)]
+#[diesel(table_name = crate::db::schema::website)]
+#[diesel(check_for_backend(diesel::pg::Pg))]
 pub struct Website {
     pub id: i32,
     pub name: String,
@@ -13,7 +16,7 @@ pub struct Website {
     pub test_match: String,
     pub test_path: String,
     pub test_reason: Option<String>,
-    pub added_time: chrono::NaiveDateTime,
-    pub last_active: chrono::NaiveDateTime,
-    pub last_checked: chrono::NaiveDateTime,
+    pub added_time: NaiveDateTime,
+    pub last_active: NaiveDateTime,
+    pub last_checked: NaiveDateTime,
 }
