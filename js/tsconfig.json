@@ -5,7 +5,8 @@
     "outFile": "main.js",
     "rootDir": "./src",
     "typeRoots": ["./typings"],
-    "incremental": true
+    "incremental": true,
+    "sourceMap": true,
   },
   "exclude": ["./typings"]
 }

@@ -40,7 +40,7 @@ if ($updatedMins > $web::MAX_UPDATE_MINS)
 foreach ($websites as $website):
     $moreInfoUrl = preg_replace("/[^a-z0-9]+/", "-",strtolower($website["name"]));
     $textColor = "";
-    if (in_array($website["return_code"], [403, 401])) $textColor = "text-white";
+    if (in_array($website["return_code"], [403, 401, 429])) $textColor = "text-white";
     else if (!$website["up"]) $textColor = "text-red";
     ?>
 <div class="bg-darkblue bg-opacity-75 p-3 mx-2 my-4 position-relative proxyBox">
@@ -51,7 +51,7 @@ foreach ($websites as $website):
                     <a title="The official link" href="<?= $website["url"] ?>"><?= $website["url"] ?></a>
                 </div>
                 <div>
-                    <?php if (!$website["up"] && !in_array($website["return_code"], [403, 401])): ?>
+                    <?php if (!$website["up"] && !in_array($website["return_code"], [403, 401, 429])): ?>
                         <i class="text-white text-opacity-50"><?= $website["test_reason"] ?? 'Down' ?></i>
                     <?php endif; ?>
                 </div>
@@ -87,7 +87,7 @@ foreach ($websites as $website):
         $showLine = false;
         foreach ($website["proxies"] as $proxy):
             $textColor = "";
-            if (in_array($proxy["return_code"], [403, 401])) $textColor = "text-white";
+            if (in_array($proxy["return_code"], [403, 401, 429])) $textColor = "text-white";
             else if (!$proxy["up"]) continue;
             ?>
             <tr class="<?= $showLine ? "border-top border-white border-opacity-25" : ""; ?>">

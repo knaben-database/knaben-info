@@ -7,7 +7,7 @@ include_once($_SERVER["DOCUMENT_ROOT"] . '/php/classes/websites.php');
 $func = Func::init();
 
 // Restrict to only me
-if ($func::$ip->ip != "185.255.128.4"){
+if ($func::$ip != "152.89.162.5"){
     echo "こんにちは！";
     die;
 }
@@ -39,10 +39,25 @@ $psql = PostgreSQL::init();
 <pre>
 <?php
 
-$web = Websites::init();
-$websites = $web->getEverything();
+// echo $psql::psswd();
 
-echo json_encode($websites, JSON_PRETTY_PRINT);
+echo "<br/>";
+echo "<br/>";
+
+$value1 = "EAA-2A";
+$psswd1 = openssl_encrypt($value1,"AES-256-ECB", "OPIAUHSF?)=(QAHFWPO");
+echo $psswd1;
+
+echo "<br/>";
+
+$value2 = "525BTSD";
+$psswd2 = openssl_encrypt($value2,"AES-128-ECB", "AG)/(HEIUEHQ)P(H#QFF");
+echo $psswd2;
+
+// $web = Websites::init();
+// $websites = $web->getEverything();
+//
+// echo json_encode($websites, JSON_PRETTY_PRINT);
 
 
 ?>
