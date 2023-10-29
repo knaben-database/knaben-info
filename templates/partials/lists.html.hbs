@@ -37,8 +37,7 @@
             </thead>
             <tbody>
             {{#each proxy_list}}
-                <tr class="border-top border-white border-opacity-25">
-                    <!--class="fs-7 px-2 me-2 mb-2 bg-white text-pink bg-opacity-25"-->
+                <tr class="{{#unless @first}}border-top border-white border-opacity-25{{/unless}}">
                     <th>
                         <div class="position-relative">
                             <div class="fancy-link mw-100 text-overflow-ellipsis " title="{{url}}">
