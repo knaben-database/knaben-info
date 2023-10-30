@@ -53,6 +53,7 @@ pub struct WebsitesWithProxiesAndClicks {
     url: String,
     ping: f64,
     return_code: i32,
+    is_restricted: bool,
     up: bool,
     test_reason: Option<String>,
     added_time: NaiveDateTime,

@@ -97,6 +97,7 @@ diesel::table! {
         url -> Text,
         ping -> Float8,
         return_code -> Int4,
+        is_restricted -> Bool,
         up -> Bool,
         test_reason -> Nullable<Text>,
         added_time -> Timestamptz,
