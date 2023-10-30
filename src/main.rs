@@ -30,16 +30,13 @@ fn index() -> Template {
     let mut cxt = context::Sorts::new("Rocket")
         .db(Query::WebsitesWithClicks);
 
-    println!("{:?}", cxt.db);
-
     cxt.logo = Some(Logo::new().core_href_link("/dashboard"));
     Template::render("index", &cxt)
 }
 
-#[get("/website")]
-fn website() -> Template
-{
-    let cxt = context::Sorts::new("Website");
+#[get("/website/<proxy_name>")]
+fn website(proxy_name: String) -> Template {
+    let mut cxt = context::Sorts::new("Website");
     Template::render("website", &cxt)
 }
 
