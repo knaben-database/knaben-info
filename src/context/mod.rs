@@ -1,6 +1,6 @@
 use chrono::prelude::*;
 use serde::Serialize;
-use std::time::Instant;
+use std::time::SystemTime;
 use std::collections::HashSet;
 use std::error::Error;
 
@@ -57,9 +57,7 @@ pub struct Sorts {
     pub style_version: String,
     pub main_js_version: String,
     pub date_time: DateTimeComponents,
-    pub load_time: Option<f64>,
-    #[serde(skip)]
-    start_load_time: Instant,
+    pub start_load_time: f64,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub logo: Option<Logo>,
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -75,8 +73,7 @@ impl Sorts {
             style_version: utils::get_file_modification_time("/static/css/style.css"),
             main_js_version: utils::get_file_modification_time("/js/main.js"),
             date_time: DateTimeComponents::new(),
-            start_load_time: Instant::now(),
-            load_time: None,
+            start_load_time: SystemTime::now().duration_since(SystemTime::UNIX_EPOCH).unwrap().as_secs_f64(),
             logo: None,
             logo_kd: None,
             db: None
@@ -95,10 +92,5 @@ impl Sorts {
         };
         self.db = Some(something);
         self
-    }
-
-
-    pub fn elapsed(&mut self) {
-        self.load_time = Some(self.start_load_time.elapsed().as_nanos() as f64 / 1000000.0);
     }
 }

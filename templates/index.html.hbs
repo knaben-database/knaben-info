@@ -26,7 +26,12 @@
 {{#if db}}
 {{#if db.websites_with_clicks}}
     <div class="m-4 d-flex flex-wrap justify-content-around position-relative">
-        <div class="position-absolute top-0 end-0 pe-4" data-bs-toggle="tooltip" style="transform: translateY(-100%);color: #120027C8" data-bs-original-title="2023-10-30 03:52:30GMT+0100">Updated 110m ago</div>
+        <!-- <div class="position-absolute top-0 end-0 pe-4" data-bs-toggle="tooltip" style="transform: translateY(-100%);color: #120027C8" data-bs-original-title="2023-10-30 03:52:30GMT+0100">Updated 110m ago</div> -->
+        {{#with db.websites_with_clicks.[0]}}
+            {{#if last_checked}}
+                <div class="position-absolute top-0 end-0 pe-4" data-bs-toggle="tooltip" style="transform: translateY(-100%);color: {{colors_between "#00002A" "#FF0000" last_checked 6000 43200 0.8}}C8" data-bs-original-title="{{pretty_date last_checked}}">{{updated_time last_checked}}</div>
+            {{/if}}
+        {{/with}}
         {{> partials/lists}}
     </div>
 {{/if}}

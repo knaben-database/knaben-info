@@ -33,15 +33,13 @@ fn index() -> Template {
     println!("{:?}", cxt.db);
 
     cxt.logo = Some(Logo::new().core_href_link("/dashboard"));
-    cxt.elapsed();
     Template::render("index", &cxt)
 }
 
 #[get("/website")]
 fn website() -> Template
 {
-    let mut cxt = context::Sorts::new("Website");
-    cxt.elapsed();
+    let cxt = context::Sorts::new("Website");
     Template::render("website", &cxt)
 }
 
@@ -50,7 +48,6 @@ fn dashboard() -> Template {
     let mut cxt = context::Sorts::new("Dashboard");
     cxt.logo = Some(Logo::new());
     cxt.logo_kd = Some(LogoKd::new().animate(true));
-    cxt.elapsed();
     Template::render("dashboard", &cxt)
 }
 

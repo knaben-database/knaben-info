@@ -14,7 +14,7 @@
                         {{/unless}}
                     {{/unless}}
                 </div>
-                <div style="color: {{colors_between_offset_ease_out "#FFFFFF" "#FF0000" 0.3 6.0 ping 0.8}}" class="d-inline-flex ms-auto">Ping:&nbsp;{{multiply_by_thousand_and_round ping}}ms</div>
+                <div style="color: {{colors_between "#FFFFFF" "#FF0000" ping 0.3 6.0 0.8}}" class="d-inline-flex ms-auto">Ping:&nbsp;{{multiply_by_thousand_and_round ping}}ms</div>
             </div>
             <h1 class="text-white mb-0 fancy-link">
                 <a title="More info" href="/website/{{name_to_safe_clickable name}}">{{name}}</a>
@@ -49,6 +49,19 @@
                             <div class="fancy-link mw-100 text-overflow-ellipsis {{#if is_restricted}}text-white{{/if}}" title="{{url}}">
                                 <a href="{{url}}" class="proxy-link" data-proxy-id="{{id}}">{{url}}</a>
                             </div>
+                            {{#if (if_contains url "knaben")}}
+                                <div class="position-absolute end-100 top-0 text-highlight" data-bs-toggle="tooltip" aria-label="Knaben's proxy" data-bs-original-title="Knaben's proxy">
+                                    <!-- If you are wondering, I did indeed edit this SVG manually -->
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="15" height="11" viewBox="300 210 200 430">
+                                        <g id="#00002aff">
+                                            <path fill="currentcolor" opacity="1.00" d=" M 282.86 294.84 C 331.85 248.96 409.22 237.80 469.25 267.80 C 526.20 294.69 564.83 355.91 563.90 418.98 C 527.25 418.97 490.73 431.31 461.71 453.72 C 420.72 484.78 395.73 535.48 395.97 586.90 C 328.47 588.02 263.46 543.46 239.62 480.39 C 213.91 417.40 231.95 339.96 282.86 294.84 Z"></path>
+                                        </g>
+                                        <g id="#00ff72ff">
+                                            <path fill="currentcolor" opacity="1.00" d=" M 461.71 453.72 C 490.73 431.31 527.25 418.97 563.90 418.98 C 564.73 462.13 546.83 505.00 516.90 535.92 C 485.71 568.25 441.02 587.76 395.97 586.90 C 395.73 535.48 420.72 484.78 461.71 453.72 Z"></path>
+                                        </g>
+                                    </svg>
+                                </div>
+                            {{/if}}
                             {{#if official}}
                                 <div class="position-absolute end-100 top-0 text-pink"  data-bs-toggle="tooltip" title='This is a confirmed official proxy'>
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check" viewBox="0 0 16 16">
@@ -60,7 +73,7 @@
                     </th>
                     <th class="text-center text-white text-opacity-50 w-min">{{clicks_last_24h}}</th>
                     <th class="text-center text-white text-opacity-50 w-min">{{clicks}}</th>
-                    <th style="color: {{colors_between_offset_ease_out "#FFFFFF" "#FF0000" 0.3 6.0 ping 0.8}}" class="text-center w-min">{{multiply_by_thousand_and_round ping}}ms</th>
+                    <th style="color: {{colors_between "#FFFFFF" "#FF0000" ping 0.3 6.0 0.8}}" class="text-center w-min">{{multiply_by_thousand_and_round ping}}ms</th>
                 </tr>
             {{/each}}
             </tbody>
