@@ -1,23 +1,44 @@
-use std::str::FromStr;
 use std::time::{SystemTime, UNIX_EPOCH};
-use chrono::{DateTime, FixedOffset, Utc};
-use rocket::fairing::AdHoc;
-use rocket::Rocket;
-use rocket_dyn_templates::handlebars::handlebars_helper;
-use rocket_dyn_templates::handlebars::{Handlebars, HelperDef, Context, RenderContext, Helper, Output, RenderError};
-use palette::{FromColor, ShiftHue, IntoColor, Lch, Srgb, rgb};
-use palette::rgb::Rgb;
+use chrono::{DateTime, Utc};
+use rocket_dyn_templates::handlebars::{Handlebars, Context, RenderContext, Helper, Output, RenderError};
 
 use crate::utils;
 
 
-fn multiply_by_thousand_and_round(h: &Helper, _: &Handlebars, _: &Context, _: &mut RenderContext, out: &mut dyn Output) -> Result<(), RenderError> {
+fn lowercase(h: &Helper, _: &Handlebars, _: &Context, _: &mut RenderContext, out: &mut dyn Output) -> Result<(), RenderError> {
+    // Get the parameter from the helper, which should be a number
+    let param = h.param(0).unwrap().value();
+    let value = param.as_str().unwrap();
+
+    // Multiply the number by 1000 and round it
+    let result = value.to_lowercase();
+
+    // Write the result to the output
+    out.write(&result.to_string())?;
+    Ok(())
+}
+
+fn hbs_round(h: &Helper, _: &Handlebars, _: &Context, _: &mut RenderContext, out: &mut dyn Output) -> Result<(), RenderError> {
     // Get the parameter from the helper, which should be a number
     let param = h.param(0).unwrap().value();
     let number = param.as_f64().unwrap();
 
     // Multiply the number by 1000 and round it
-    let result = (number * 1000.0).round();
+    let result = number.round();
+
+    // Write the result to the output
+    out.write(&result.to_string())?;
+    Ok(())
+}
+
+fn multiply(h: &Helper, _: &Handlebars, _: &Context, _: &mut RenderContext, out: &mut dyn Output) -> Result<(), RenderError> {
+    // Get the parameter from the helper, which should be a number
+    let number1 = h.param(0).unwrap().value().as_f64().unwrap();
+    let number2 = h.param(1).unwrap().value().as_f64().unwrap();
+    let round = h.hash_get("round").and_then(|v| v.value().as_bool());
+
+    // Multiply the number by 1000 and round it
+    let result = if round.is_some() && round.unwrap() == true {(number1 * number2).round()} else {number1 * number2};
 
     // Write the result to the output
     out.write(&result.to_string())?;
@@ -136,7 +157,7 @@ fn if_contains(h: &Helper, _: &Handlebars, _: &Context, _: &mut RenderContext, o
     let value2 = h.param(1).unwrap().value().as_str().unwrap();
 
     if value1.contains(value2) {
-        out.write(&"true")?;
+        out.write(&"1")?;
     }
 
     Ok(())
@@ -144,11 +165,13 @@ fn if_contains(h: &Helper, _: &Handlebars, _: &Context, _: &mut RenderContext, o
 
 // Then you can register your helper like this:
 pub fn register_helpers(registry: &mut Handlebars) {
-    registry.register_helper("multiply_by_thousand_and_round", Box::new(multiply_by_thousand_and_round));
+    registry.register_helper("multiply", Box::new(multiply));
+    registry.register_helper("round", Box::new(hbs_round));
     registry.register_helper("colors_between", Box::new(colors_between));
     registry.register_helper("name_to_safe_clickable", Box::new(name_to_safe_clickable));
     registry.register_helper("load_time", Box::new(load_time));
     registry.register_helper("updated_time", Box::new(updated_time));
     registry.register_helper("pretty_date", Box::new(pretty_date));
-    registry.register_helper("if_contains", Box::new(if_contains));
+    registry.register_helper("contains", Box::new(if_contains));
+    registry.register_helper("lowercase", Box::new(lowercase));
 }

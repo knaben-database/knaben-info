@@ -14,7 +14,7 @@
                         {{/unless}}
                     {{/unless}}
                 </div>
-                <div style="color: {{colors_between "#FFFFFF" "#FF0000" ping 0.3 6.0 0.8}}" class="d-inline-flex ms-auto">Ping:&nbsp;{{multiply_by_thousand_and_round ping}}ms</div>
+                <div style="color: {{colors_between "#FFFFFF" "#FF0000" ping 0.3 6.0 0.8}}" class="d-inline-flex ms-auto">Ping:&nbsp;{{multiply ping 1000 round=true}}ms</div>
             </div>
             <h1 class="text-white mb-0 fancy-link">
                 <a title="More info" href="/website/{{name_to_safe_clickable name}}">{{name}}</a>
@@ -49,7 +49,7 @@
                             <div class="fancy-link mw-100 text-overflow-ellipsis {{#if is_restricted}}text-white{{/if}}" title="{{url}}">
                                 <a href="{{url}}" class="proxy-link" data-proxy-id="{{id}}">{{url}}</a>
                             </div>
-                            {{#if (if_contains url "knaben")}}
+                            {{#if (contains url "knaben")}}
                                 <div class="position-absolute end-100 top-0 text-highlight" data-bs-toggle="tooltip" aria-label="Knaben's proxy" data-bs-original-title="Knaben's proxy">
                                     <!-- If you are wondering, I did indeed edit this SVG manually -->
                                     <svg xmlns="http://www.w3.org/2000/svg" width="15" height="11" viewBox="300 210 200 430">
@@ -73,7 +73,7 @@
                     </th>
                     <th class="text-center text-white text-opacity-50 w-min">{{clicks_last_24h}}</th>
                     <th class="text-center text-white text-opacity-50 w-min">{{clicks}}</th>
-                    <th style="color: {{colors_between "#FFFFFF" "#FF0000" ping 0.3 6.0 0.8}}" class="text-center w-min">{{multiply_by_thousand_and_round ping}}ms</th>
+                    <th style="color: {{colors_between "#FFFFFF" "#FF0000" ping 0.3 6.0 0.8}}" class="text-center w-min">{{multiply ping 1000 round=true}}ms</th>
                 </tr>
             {{/each}}
             </tbody>

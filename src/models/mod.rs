@@ -1,4 +1,4 @@
-use chrono::{DateTime, NaiveDateTime};
+use chrono::{DateTime, Utc};
 use diesel::{AsChangeset, Insertable, Queryable, Selectable};
 use diesel::prelude::*;
 
@@ -16,7 +16,7 @@ pub struct Website {
     pub test_match: String,
     pub test_path: String,
     pub test_reason: Option<String>,
-    pub added_time: NaiveDateTime,
-    pub last_active: NaiveDateTime,
-    pub last_checked: NaiveDateTime,
+    pub added_time: DateTime<Utc>,
+    pub last_active: DateTime<Utc>,
+    pub last_checked: DateTime<Utc>,
 }

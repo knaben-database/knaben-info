@@ -2,7 +2,6 @@ use rocket_dyn_templates::Template;
 use rocket_dyn_templates::handlebars::Renderable;
 use rocket::fs::FileServer;
 
-#[macro_use] extern crate handlebars;
 #[macro_use] extern crate serde_json;
 #[macro_use] extern crate rocket;
 #[macro_use] extern crate serde_derive;
@@ -28,15 +27,23 @@ static_response_handler! {
 #[get("/")]
 fn index() -> Template {
     let mut cxt = context::Sorts::new("Rocket")
-        .db(Query::WebsitesWithClicks);
+        .db(Query::WebsitesWithClicks(None));
 
     cxt.logo = Some(Logo::new().core_href_link("/dashboard"));
     Template::render("index", &cxt)
 }
 
-#[get("/website/<proxy_name>")]
-fn website(proxy_name: String) -> Template {
-    let mut cxt = context::Sorts::new("Website");
+#[get("/website/<website_name>")]
+fn website(website_name: String) -> Template {
+    let mut cxt = context::Sorts::new("Website")
+        .db(Query::WebsitesWithClicks(Some(website_name)))
+        .db(Query::ProxyWithClicks(None));
+
+    cxt.logo = Some(Logo::new());
+    cxt.logo_kd = Some(LogoKd::new().animate(true));
+
+    // TODO: 404 on not found
+
     Template::render("website", &cxt)
 }
 
