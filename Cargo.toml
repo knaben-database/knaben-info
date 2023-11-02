@@ -18,3 +18,4 @@ dotenvy = "0.15"
 diesel = { version = "2.1" , features = ["postgres", "chrono", "serde_json"]}
 sha2 = "0.10"
 regex = "1.10"
+lazy_static = "1"

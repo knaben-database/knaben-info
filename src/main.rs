@@ -17,6 +17,7 @@ mod models;
 mod hbs;
 mod request_guards;
 mod api;
+mod error_pages;
 
 
 // Make the favicon appear to be served from root
@@ -66,6 +67,7 @@ fn rocket() -> _ {
         ))
         .mount("/", routes![favicon])
         .mount("/", routes![index, dashboard, website, api::click])
+        .register("/", catchers![error_pages::default_catcher])
 
         // Serve the static files
         .mount("/static", FileServer::from("static"))

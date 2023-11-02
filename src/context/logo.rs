@@ -31,8 +31,8 @@ impl Logo {
         self
     }
 
-    pub fn core_message(mut self, core_message: &str) -> Self {
-        self.core_message = Some(core_message.to_string());
+    pub fn core_message(mut self, core_message: String) -> Self {
+        self.core_message = Some(core_message);
         self
     }
 }

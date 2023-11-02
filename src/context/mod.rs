@@ -60,6 +60,8 @@ pub struct Sorts {
     pub date_time: DateTimeComponents,
     pub start_load_time: f64,
     #[serde(skip_serializing_if = "Option::is_none")]
+    pub status_info: Option<(u16, String)>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub logo: Option<Logo>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub logo_kd: Option<LogoKd>,
@@ -75,6 +77,7 @@ impl Sorts {
             main_js_version: utils::get_file_modification_time("/js/main.js"),
             date_time: DateTimeComponents::new(),
             start_load_time: SystemTime::now().duration_since(SystemTime::UNIX_EPOCH).unwrap().as_secs_f64(),
+            status_info: None,
             logo: None,
             logo_kd: None,
             db: None
@@ -107,6 +110,11 @@ impl Sorts {
             Query::ProxyList => {},
             Query::RecentWebsites => {}
         };
+        self
+    }
+
+    pub fn status(mut self, status_code: u16, msg: String) -> Self {
+        self.status_info = Some((status_code, msg));
         self
     }
 }
