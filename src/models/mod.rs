@@ -1,6 +1,5 @@
 use chrono::{DateTime, Utc};
 use diesel::{AsChangeset, Insertable, Queryable, Selectable};
-use diesel::prelude::*;
 
 #[derive(Queryable, Selectable, Insertable, AsChangeset, Debug, Clone)]
 #[diesel(table_name = crate::db::schema::website)]

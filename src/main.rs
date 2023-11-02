@@ -1,12 +1,7 @@
-use std::error::Error;
-use rocket::fairing::{Fairing, Info, Kind};
 use rocket_dyn_templates::Template;
-use rocket_dyn_templates::handlebars::Renderable;
 use rocket::fs::FileServer;
-use rocket::request::FromRequest;
 
 
-#[macro_use] extern crate serde_json;
 #[macro_use] extern crate rocket;
 #[macro_use] extern crate serde_derive;
 #[macro_use] extern crate rocket_include_static_resources;

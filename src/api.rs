@@ -8,7 +8,7 @@ use crate::request_guards::{IPAddress, UserAgent};
 
 #[head("/api/clicks/<proxy_id>")]
 pub fn click(ip: IPAddress, user_agent: UserAgent, proxy_id: i32) -> Status {
-    if (ip.0.is_none()) {
+    if ip.0.is_none() {
         return Status::BadRequest;
     }
     let ip = ip.0.unwrap();

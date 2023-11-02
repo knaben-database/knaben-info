@@ -1,11 +1,8 @@
 use std::env;
-use std::net::IpAddr;
 use chrono::{DateTime, NaiveDateTime, Utc};
 use diesel::{Connection, PgConnection};
 use diesel::prelude::*;
-use diesel::query_dsl::methods::ThenOrderDsl;
 use dotenvy::dotenv;
-use crate::db::schema::clicks::proxy_id;
 use crate::models::Website;
 
 pub mod schema;
@@ -17,33 +14,6 @@ fn establish_connection() -> PgConnection {
     let database_url = env::var("DATABASE_URL").expect("DATABASE_URL must be set");
     PgConnection::establish(&database_url)
         .unwrap_or_else(|_| panic!("Error connecting to {database_url}"))
-}
-
-struct Comment {
-    id: i32,
-    web_id: i32,
-    proxy_id: Option<i32>,
-    time: NaiveDateTime,
-    content: String,
-    identifier: String
-}
-
-struct ProxyList {
-    id: i32,
-    web_id: i32,
-    url: String,
-    test_path: Option<String>,
-    test_match: Option<String>,
-    ping: f64,
-    return_code: i32,
-    up: bool,
-    test_reason: Option<String>,
-    added_time: DateTime<Utc>,
-    last_active: DateTime<Utc>,
-    last_checked: DateTime<Utc>,
-    official: bool,
-    clicks_last_24h: u64,
-    clicks: u64
 }
 
 #[derive(Queryable, Selectable, Serialize, Debug, Clone)]
@@ -113,7 +83,7 @@ pub fn get_websites_with_clicks(website_name : Option<String>) -> Result<Vec<Web
 }
 
 
-pub fn get_websites() -> Vec<Website> {
+pub fn _get_websites() -> Vec<Website> {
     use schema::website::dsl::*;
 
     let conn = &mut establish_connection();

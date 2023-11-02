@@ -104,7 +104,8 @@ impl Sorts {
                     Err(_) => panic!("dead")
                 }
             },
-            _ => todo!("Not implemented yet")
+            Query::ProxyList => {},
+            Query::RecentWebsites => {}
         };
         self
     }

@@ -1,4 +1,4 @@
-pub fn curve(x: f32, steepness: f32) -> f32 {
+pub fn _curve(x: f32, steepness: f32) -> f32 {
 
     let a = (1.0-2.0*(steepness/(steepness-1.0))) / (1.0 + f32::powf(steepness, 2.0*x-1.0));
     let b = steepness/(steepness-1.0);
