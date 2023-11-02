@@ -51,9 +51,11 @@ var Api = (function () {
             if ("headers" in apiOptions && "Content-Type" in apiOptions["headers"])
                 delete apiOptions["headers"]["Content-Type"];
             var requestQuery = [];
-            for (var i = 0; i < Object.keys(data).length; i++) {
-                var key = Object.keys(data)[i];
-                requestQuery.push(key + "=" + data[key]);
+            if (data !== null) {
+                for (var i = 0; i < Object.keys(data).length; i++) {
+                    var key = Object.keys(data)[i];
+                    requestQuery.push(key + "=" + data[key]);
+                }
             }
             if (requestQuery.length > 0) {
                 if (url.indexOf("?") === -1)
@@ -200,7 +202,11 @@ var Clicks = /** @class */ (function () {
     };
     Clicks.click = function (id, link, redirect) {
         if (redirect === void 0) { redirect = false; }
-        Api.json("/php/api/click.php", { id: id }, { method: "head" }).then(function (data) {
+        Api.json("/api/clicks/".concat(id), null, { method: "head" }).then(function (data) {
+            if (redirect)
+                window.location.href = link;
+        }).catch(function (e) {
+            console.warn(e);
             if (redirect)
                 window.location.href = link;
         });

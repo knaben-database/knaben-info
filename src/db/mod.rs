@@ -1,9 +1,11 @@
 use std::env;
+use std::net::IpAddr;
 use chrono::{DateTime, NaiveDateTime, Utc};
 use diesel::{Connection, PgConnection};
 use diesel::prelude::*;
 use diesel::query_dsl::methods::ThenOrderDsl;
 use dotenvy::dotenv;
+use crate::db::schema::clicks::proxy_id;
 use crate::models::Website;
 
 pub mod schema;
@@ -44,7 +46,7 @@ struct ProxyList {
     clicks: u64
 }
 
-#[derive(Queryable, Selectable, Insertable, Serialize, Debug, Clone)]
+#[derive(Queryable, Selectable, Serialize, Debug, Clone)]
 #[diesel(table_name = crate::db::schema_views::front_page)]
 #[diesel(check_for_backend(diesel::pg::Pg))]
 pub struct WebsitesWithProxiesAndClicks {
@@ -67,7 +69,7 @@ pub struct WebsitesWithProxiesAndClicks {
     comments: serde_json::Value
 }
 
-#[derive(Queryable, Selectable, Insertable, Serialize, Debug, Clone)]
+#[derive(Queryable, Selectable, Serialize, Debug, Clone)]
 #[diesel(table_name = crate::db::schema_views::website_info)]
 #[diesel(check_for_backend(diesel::pg::Pg))]
 pub struct ProxiesAndClicks {
@@ -144,4 +146,34 @@ pub fn get_proxies_with_clicks(w_id: Option<i32>) -> Result<Vec<ProxiesAndClicks
     };
 
     Ok(results)
+}
+
+#[derive(Insertable, Serialize)]
+#[diesel(table_name = crate::db::schema::clicks)]
+#[diesel(check_for_backend(diesel::pg::Pg))]
+struct NewClick {
+    identifier: String,
+    proxy_id: i32,
+    time: NaiveDateTime
+}
+
+pub fn insert_click(identity: String, p_id: i32) -> Result<(), Box<dyn std::error::Error>> {
+    use schema::clicks::dsl::*;
+
+    let conn = &mut establish_connection();
+
+    let new_click = NewClick {
+        identifier: identity,
+        proxy_id: p_id,
+        time: Utc::now().naive_utc(),
+    };
+
+    diesel::insert_into(clicks)
+        .values(&new_click)
+        .on_conflict((identifier, proxy_id))
+        .do_update()
+        .set(time.eq(Utc::now().naive_utc()))
+        .execute(conn)?;
+
+    Ok(())
 }

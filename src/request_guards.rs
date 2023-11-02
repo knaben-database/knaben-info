@@ -17,3 +17,18 @@ impl<'r> FromRequest<'r> for IPAddress {
         }
     }
 }
+
+pub struct UserAgent(pub Option<String>);
+#[rocket::async_trait]
+impl<'r> FromRequest<'r> for UserAgent {
+    type Error = std::convert::Infallible;
+
+    async fn from_request(request: &'r Request<'_>) -> Outcome<Self, Self::Error> {
+        let headers = request.headers();
+        let user_agent = headers.get_one("User-Agent");
+        match user_agent {
+            Some(user_agent) => Outcome::Success(UserAgent(Some(user_agent.to_string()))),
+            None => Outcome::Forward(Status::InternalServerError),
+        }
+    }
+}

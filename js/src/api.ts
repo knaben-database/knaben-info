@@ -50,9 +50,11 @@ let Api = (function () {
                 delete apiOptions["headers"]["Content-Type"];
 
             let requestQuery = [];
-            for (let i = 0; i < Object.keys(data).length; i++) {
-                let key = Object.keys(data)[i];
-                requestQuery.push(key + "=" + data[key]);
+            if (data !== null) {
+                for (let i = 0; i < Object.keys(data).length; i++) {
+                    let key = Object.keys(data)[i];
+                    requestQuery.push(key + "=" + data[key]);
+                }
             }
             if (requestQuery.length > 0){
                 if (url.indexOf("?") === -1)
