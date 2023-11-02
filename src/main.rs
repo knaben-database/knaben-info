@@ -1,6 +1,10 @@
+use rocket::fairing::{Fairing, Info, Kind};
 use rocket_dyn_templates::Template;
 use rocket_dyn_templates::handlebars::Renderable;
 use rocket::fs::FileServer;
+use rocket::http::Status;
+use rocket::request::FromRequest;
+
 
 #[macro_use] extern crate serde_json;
 #[macro_use] extern crate rocket;
@@ -10,12 +14,14 @@ use rocket::fs::FileServer;
 use context::logo_kd::LogoKd;
 use context::logo::Logo;
 use crate::context::Query;
+use crate::request_guards::IPAddress;
 
 mod context;
 mod utils;
 mod db;
 mod models;
 mod hbs;
+mod request_guards;
 
 
 // Make the favicon appear to be served from root
@@ -56,6 +62,16 @@ fn dashboard() -> Template {
 }
 
 
+#[head("/clicks")]
+fn click(ip: IPAddress) -> Status {
+    match ip.0 {
+        Some(ip) => println!("Your IP address is {}", ip),
+        None => println!("Couldn't get your IP address."),
+    };
+    Status::Ok
+}
+
+
 #[launch]
 fn rocket() -> _ {
     rocket::build()
@@ -64,7 +80,7 @@ fn rocket() -> _ {
             "favicon" => "static/img/favicon.ico"
         ))
         .mount("/", routes![favicon])
-        .mount("/", routes![index, dashboard, website])
+        .mount("/", routes![index, dashboard, website, click])
 
         // Serve the static files
         .mount("/static", FileServer::from("static"))
