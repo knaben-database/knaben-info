@@ -32,9 +32,12 @@ class Clicks {
     }
 
     private static click(id : number, link : string, redirect = false){
-        Api.json("/php/api/click.php", {id: id}, {method: "head"}).then(data => {
+        Api.json(`/api/clicks/${id}`, null, {method: "head"}).then(data => {
             if (redirect) window.location.href = link;
-        });
+        }).catch(e => {
+            console.warn(e);
+            if (redirect) window.location.href = link;
+        })
     }
 
 }

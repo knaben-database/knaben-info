@@ -2,11 +2,11 @@
   "compilerOptions": {
     "target": "es5",
     "lib": ["DOM", "ES2021"],
-    "outFile": "main.js",
+    "outFile": "../static/js/main.js",
     "rootDir": "./src",
     "typeRoots": ["./typings"],
     "incremental": true,
-    "sourceMap": true,
+    "sourceMap": true
   },
   "exclude": ["./typings"]
 }

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Knaben's Proxy List</title>
+    <link rel="icon" href="/favicon.ico">
+    <meta name="description" content="Status list of various proxy websites, including our own. Only working proxies are shown">
+    <meta name="keywords" content="proxy, list, workaround, bypass, working, free, knaben"/>
+    <link rel="stylesheet" href="/static/css/style.css?v={{style_version}}">
+    <script src="/static/js/bootstrap.bundle.min.js"></script>
+    <script src="/static/js/main.js?v={{main_js_version}}"></script>
+</head>
+<body>
+{{#with logo}}
+    <div class="m-auto mt-5" style="height: 350px;width: 350px;">
+        {{> partials/logo}}
+    </div>
+{{/with}}
+<div class="m-auto text-center text-darkblue fs-0">Knaben<div class="text-highlight d-inline">'</div>s Proxy List</div>
+<div class="d-flex justify-content-center">
+    <div class="text-highlight mx-2 d-flex" data-bs-toggle="tooltip" title='Proxies and websites with this color are confirmed to be working'><div class="bg-highlight align-self-center me-1" style="height: 10px;width:10px"></div> Working</div>
+    <div class="text-white mx-2 d-flex" data-bs-toggle="tooltip" title='Checking towards websites and proxies with this color may have been blocked. 403 Forbidden return code.'><div class="bg-white align-self-center me-1" style="height: 10px;width:10px"></div> Most likely working</div>
+    <div class="text-darkblue text-opacity-50 mx-2 d-flex" data-bs-toggle="tooltip" title='Proxies that are not working will be hidden'><div class="border border-darkblue border-opacity-50 align-self-center me-1" style="height: 10px;width:10px"></div> (Down proxies gets hidden)</div>
+</div>
+<hr class="mx-5"/>
+{{#if db}}
+{{#if db.websites_with_clicks}}
+    <div class="m-4 d-flex flex-wrap justify-content-around position-relative">
+        <!-- <div class="position-absolute top-0 end-0 pe-4" data-bs-toggle="tooltip" style="transform: translateY(-100%);color: #120027C8" data-bs-original-title="2023-10-30 03:52:30GMT+0100">Updated 110m ago</div> -->
+        {{#with db.websites_with_clicks.[0]}}
+            {{#if last_checked}}
+                <div class="position-absolute top-0 end-0 pe-4" data-bs-toggle="tooltip" style="transform: translateY(-100%);color: {{colors_between "#00002A" "#FF0000" last_checked 6000 43200 0.8}}C8" data-bs-original-title="{{pretty_date last_checked}}">{{updated_time last_checked}}</div>
+            {{/if}}
+        {{/with}}
+        {{> partials/lists}}
+    </div>
+{{/if}}
+{{/if}}
+{{> partials/footer}}
+</body>
+</html>
