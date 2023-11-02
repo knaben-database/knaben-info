@@ -7,6 +7,7 @@ use dotenvy::dotenv;
 use crate::models::Website;
 
 pub mod schema;
+pub mod schema_views;
 
 fn establish_connection() -> PgConnection {
     dotenv().ok();
@@ -44,7 +45,7 @@ struct ProxyList {
 }
 
 #[derive(Queryable, Selectable, Insertable, Serialize, Debug, Clone)]
-#[diesel(table_name = crate::db::schema::front_page)]
+#[diesel(table_name = crate::db::schema_views::front_page)]
 #[diesel(check_for_backend(diesel::pg::Pg))]
 pub struct WebsitesWithProxiesAndClicks {
     pub id: i32,
@@ -67,7 +68,7 @@ pub struct WebsitesWithProxiesAndClicks {
 }
 
 #[derive(Queryable, Selectable, Insertable, Serialize, Debug, Clone)]
-#[diesel(table_name = crate::db::schema::website_info)]
+#[diesel(table_name = crate::db::schema_views::website_info)]
 #[diesel(check_for_backend(diesel::pg::Pg))]
 pub struct ProxiesAndClicks {
     id: i32,
@@ -88,7 +89,7 @@ pub struct ProxiesAndClicks {
 }
 
 pub fn get_websites_with_clicks(website_name : Option<String>) -> Result<Vec<WebsitesWithProxiesAndClicks>, Box<dyn std::error::Error>> {
-    use schema::front_page::dsl::*;
+    use schema_views::front_page::dsl::*;
 
     let conn = &mut establish_connection();
 
@@ -125,7 +126,7 @@ pub fn get_websites() -> Vec<Website> {
 }
 
 pub fn get_proxies_with_clicks(w_id: Option<i32>) -> Result<Vec<ProxiesAndClicks>, Box<dyn std::error::Error>> {
-    use schema::website_info::dsl::*;
+    use schema_views::website_info::dsl::*;
 
     let conn = &mut establish_connection();
 
