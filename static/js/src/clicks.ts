@@ -8,8 +8,12 @@ class Clicks {
         for (let i = 0; i < proxyLinkElements.length; i++) {
             const proxyLinkElement = proxyLinkElements[i] as HTMLLinkElement;
             const data_proxy_id = proxyLinkElement.getAttribute("data-proxy-id");
+            if (data_proxy_id === null) continue;
+
             const proxy_id = parseInt(data_proxy_id);
             const link = proxyLinkElement.getAttribute("href");
+            if (link === null) continue;
+
             proxyLinkElement.addEventListener("click", (e) => {
                 let redirect = !this.SHIFT && !this.CTRL;
                 if (redirect) e.preventDefault();

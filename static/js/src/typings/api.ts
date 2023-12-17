@@ -5,7 +5,7 @@ interface ApiResponse {
     /**
      * Headers returned by fetch
      */
-    headers: Headers,
+    headers: Headers|null,
     /**
      * If the request went ok or not
      */
@@ -55,5 +55,17 @@ interface ApiResponse {
      *
      * Keep in mind if an error occurs, there won't be any source. Source will be `null`
      */
-    source: any
+    source: any,
+    /**
+     * If API returns a multi result, the sources will land here
+     */
+    results?: ApiResponse[]
+}
+
+interface DefaultAPIOptions {
+    method: string,
+    headers?: {
+        'Accept': string,
+        'Content-Type': string
+    }
 }

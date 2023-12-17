@@ -22,9 +22,9 @@ class LogoBloat {
         this.elm.addEventListener("mouseleave", () => this.hovering = false);
     }
 
-    private getColor(){
-        let color = "";
-        if (this.elm.hasAttribute("data-logo-color-theme") && this.elm.getAttribute("data-logo-color-theme").trim() !== "")
+    private getColor(): string|null {
+        let color: string|null;
+        if (this.elm.hasAttribute("data-logo-color-theme") && this.elm.getAttribute("data-logo-color-theme")?.trim() !== "")
             color = this.elm.getAttribute("data-logo-color-theme");
         else
             color = Style().getPropertyValue("--bs-highlight");
@@ -32,7 +32,7 @@ class LogoBloat {
     }
 
     private blinkLoop(){
-        const planetCores = this.elm.querySelectorAll(".planet-core");
+        const planetCores: NodeListOf<HTMLDivElement> = this.elm.querySelectorAll(".planet-core");
         const highlightColor = this.getColor();
         const blinkingPlanetCores = new Set();
         let counter = 0;
@@ -48,7 +48,7 @@ class LogoBloat {
                 return;
             }
 
-            let randomPlanetCore;
+            let randomPlanetCore : HTMLDivElement;
             do {
                 const randomIndex = Math.floor(Math.random() * planetCores.length);
                 randomPlanetCore = planetCores[randomIndex];
@@ -58,7 +58,8 @@ class LogoBloat {
             blinkingPlanetCores.add(randomPlanetCore);
 
             // Change the background color of the selected planet core
-            randomPlanetCore.style.backgroundColor = highlightColor; // Change to the desired color
+            if (highlightColor)
+                randomPlanetCore.style.backgroundColor = highlightColor; // Change to the desired color
             randomPlanetCore.style.transform = "scale(1.1)";
             randomPlanetCore.style.transitionDuration = ""
 

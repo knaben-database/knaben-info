@@ -3,7 +3,7 @@
  * @param title{string} Title of the stylesheet
  * @constructor wth is this?
  */
-let Style = (title? : "user-defined" | "style") => {
+const Style = (title? : "user-defined" | "style") => {
 
     /**
      * This is used to
@@ -31,8 +31,11 @@ let Style = (title? : "user-defined" | "style") => {
      * @returns {number} Returns -1 if not found, or else it returns the key of the rule
      */
     function findSelector(rules : CSSRuleList, selector : string) : number{
-        for ( let i = 0; i < rules.length; i++ )
-            if (rules[i]["selectorText"] === selector) return i;
+        for ( let i = 0; i < rules.length; i++ ) {
+            const rule = rules[i];
+            // @ts-ignore I don't dare to touch this actually
+            if (rule["selectorText"] === selector) return i;
+        }
         return -1;
     }
 
@@ -51,26 +54,29 @@ let Style = (title? : "user-defined" | "style") => {
         let key2 = findSelector(stylesheet.cssRules, selector);
         if (key2 === -1) return; // Could not find selector
 
-        stylesheet.cssRules[key2]["style"][rule] = "";
+        const cssRule = stylesheet.cssRules[key2];
+        // @ts-ignore Don't dare to touch this either
+        cssRule["style"][rule] = "";
     }
 
 
     /**
-     * Function for getting a value of a spesific selector within the CSS Stylesheet
+     * Function for getting a value of a specific selector within the CSS Stylesheet
      * @param selector{string} The selector. Some examples might be: #mainDiv, .text-muted
      * @param rule{string} The rule to select, for example "color", "background-color" etc...
      */
-    function get(selector : string, rule : string){
+    function get(selector : string, rule : string) : string|undefined{
         selector = selector.replace(/ +(?= )/g,'').trim();
         let key = findStyle();
-        if (key === -1) return; // Could not find style
+        if (key === -1) return ""; // Could not find style
 
         let stylesheet = document.styleSheets[key];
 
-        if (!("cssRules" in stylesheet)) return;
+        if (!("cssRules" in stylesheet)) return "";
         let key2 = findSelector(stylesheet["cssRules"], selector);
-        if (key2 === -1) return; // Could not find selector
+        if (key2 === -1) return ""; // Could not find selector
 
+        // @ts-ignore Just, trust me bro
         if (stylesheet.cssRules[key2]["style"][rule]) return stylesheet.cssRules[key2]["style"][rule];
     }
 
@@ -102,10 +108,11 @@ let Style = (title? : "user-defined" | "style") => {
                 if (Object.keys(rule[i]).length > 1)
                     throw new Error("Can only have 1 key for each array");
                 let name = Object.keys(rule[i])[0];
+                // @ts-ignore shhhhhhhh....
                 let value = rule[i][name];
                 if (stylesheet.cssRules.length === 0)
                     stylesheet.insertRule(`${selector} { ${name}: ${value} }`, 0);
-                else
+                else // @ts-ignore shhhhhhhh....
                     stylesheet.cssRules[0]["style"][name] = value;
             }
 
@@ -119,10 +126,11 @@ let Style = (title? : "user-defined" | "style") => {
                 if (Object.keys(rule[i]).length > 1)
                     throw new Error("Can only have 1 key for each array");
                 let name = Object.keys(rule[i])[0];
+                // @ts-ignore Just shhhhhhhh....
                 let value = rule[i][name];
                 if (stylesheet.cssRules.length === 0)
                     stylesheet.insertRule(`${selector} { ${name}: ${value} }`, 0);
-                else
+                else // @ts-ignore Just shhhhhhhh....
                     stylesheet.cssRules[0]["style"][name] = value;
             }
         }else{ // Modify the existing rule
@@ -130,7 +138,9 @@ let Style = (title? : "user-defined" | "style") => {
                 if (Object.keys(rule[i]).length > 1)
                     throw new Error("Can only have 1 key for each array");
                 let name = Object.keys(rule[i])[0];
+                // @ts-ignore Just shhhhhhhh....
                 let value = rule[i][name];
+                // @ts-ignore Just shhhhhhhh....
                 stylesheet.cssRules[key2]["style"][name] = value;
             }
         }

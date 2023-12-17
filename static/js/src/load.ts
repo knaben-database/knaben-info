@@ -3,7 +3,7 @@
  */
 // This will trigger first
 document.addEventListener('DOMContentLoaded', function () {
-
+    console.log("meow meow");
     // Init click events
     Clicks.init();
 
