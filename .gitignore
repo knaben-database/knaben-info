@@ -2,3 +2,4 @@
 Cargo.lock
 **/.sass-cache
 .env
+.direnv/
