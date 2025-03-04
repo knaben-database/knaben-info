@@ -1,12 +1,15 @@
-use std::env;
-use chrono::{DateTime, NaiveDateTime, Utc};
-use diesel::{Connection, PgConnection};
-use diesel::prelude::*;
-use dotenvy::dotenv;
 use crate::models::Website;
+use chrono::{DateTime, NaiveDateTime, Utc};
+use diesel::prelude::*;
+use diesel::{Connection, PgConnection};
+use diesel_migrations::{EmbeddedMigrations, MigrationHarness};
+use dotenvy::dotenv;
+use std::env;
 
 pub mod schema;
 pub mod schema_views;
+
+pub const MIGRATIONS: EmbeddedMigrations = diesel_migrations::embed_migrations!("./migrations");
 
 fn establish_connection() -> PgConnection {
     dotenv().ok();
@@ -14,6 +17,11 @@ fn establish_connection() -> PgConnection {
     let database_url = env::var("DATABASE_URL").expect("DATABASE_URL must be set");
     PgConnection::establish(&database_url)
         .unwrap_or_else(|_| panic!("Error connecting to {database_url}"))
+}
+
+pub fn run_migrations() {
+    let mut connection = establish_connection();
+    connection.run_pending_migrations(MIGRATIONS).unwrap();
 }
 
 #[derive(Queryable, Selectable, Serialize, Debug, Clone)]
@@ -36,7 +44,7 @@ pub struct WebsitesWithProxiesAndClicks {
     clicks: i64,
     clicks_last_24h: i64,
     proxy_list: serde_json::Value,
-    comments: serde_json::Value
+    comments: serde_json::Value,
 }
 
 #[derive(Queryable, Selectable, Serialize, Debug, Clone)]
@@ -57,10 +65,12 @@ pub struct ProxiesAndClicks {
     last_checked: DateTime<Utc>,
     clicks: i64,
     clicks_last_24h: i64,
-    comments: serde_json::Value
+    comments: serde_json::Value,
 }
 
-pub fn get_websites_with_clicks(website_name : Option<String>) -> Result<Vec<WebsitesWithProxiesAndClicks>, Box<dyn std::error::Error>> {
+pub fn get_websites_with_clicks(
+    website_name: Option<String>,
+) -> Result<Vec<WebsitesWithProxiesAndClicks>, Box<dyn std::error::Error>> {
     use schema_views::front_page::dsl::*;
 
     let conn = &mut establish_connection();
@@ -73,15 +83,14 @@ pub fn get_websites_with_clicks(website_name : Option<String>) -> Result<Vec<Web
                 .filter(name.ilike(formatted_pn))
                 .select(WebsitesWithProxiesAndClicks::as_select())
                 .load(conn)?
-        },
+        }
         None => front_page
             .select(WebsitesWithProxiesAndClicks::as_select())
-            .load(conn)?
+            .load(conn)?,
     };
 
     Ok(results)
 }
-
 
 pub fn _get_websites() -> Vec<Website> {
     use schema::website::dsl::*;
@@ -97,22 +106,27 @@ pub fn _get_websites() -> Vec<Website> {
     results
 }
 
-pub fn get_proxies_with_clicks(w_id: Option<i32>) -> Result<Vec<ProxiesAndClicks>, Box<dyn std::error::Error>> {
+pub fn get_proxies_with_clicks(
+    w_id: Option<i32>,
+) -> Result<Vec<ProxiesAndClicks>, Box<dyn std::error::Error>> {
     use schema_views::website_info::dsl::*;
 
     let conn = &mut establish_connection();
 
     let results: Vec<ProxiesAndClicks> = match w_id {
-        Some(wi) => {
-            website_info
-                .filter(web_id.eq(wi))
-                .select(ProxiesAndClicks::as_select())
-                .order((clicks_last_24h.desc(), up.desc(), official.desc(), clicks.desc()))
-                .load(conn)?
-        },
+        Some(wi) => website_info
+            .filter(web_id.eq(wi))
+            .select(ProxiesAndClicks::as_select())
+            .order((
+                clicks_last_24h.desc(),
+                up.desc(),
+                official.desc(),
+                clicks.desc(),
+            ))
+            .load(conn)?,
         None => website_info
             .select(ProxiesAndClicks::as_select())
-            .load(conn)?
+            .load(conn)?,
     };
 
     Ok(results)
@@ -124,7 +138,7 @@ pub fn get_proxies_with_clicks(w_id: Option<i32>) -> Result<Vec<ProxiesAndClicks
 struct NewClick {
     identifier: String,
     proxy_id: i32,
-    time: NaiveDateTime
+    time: NaiveDateTime,
 }
 
 pub fn insert_click(identity: String, p_id: i32) -> Result<(), Box<dyn std::error::Error>> {

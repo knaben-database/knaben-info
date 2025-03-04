@@ -16,6 +16,7 @@ rocket-include-static-resources = "0.10"
 chrono = { version = "0.4", features = ["serde"] }
 dotenvy = "0.15"
 diesel = { version = "2.1" , features = ["postgres", "chrono", "serde_json"]}
+diesel_migrations = "2.1"
 sha2 = "0.10"
 regex = "1.10"
 lazy_static = "1"

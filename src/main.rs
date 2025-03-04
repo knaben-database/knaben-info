@@ -1,35 +1,34 @@
-use rocket_dyn_templates::Template;
 use rocket::fs::FileServer;
+use rocket_dyn_templates::Template;
 
+#[macro_use]
+extern crate rocket;
+#[macro_use]
+extern crate serde_derive;
+#[macro_use]
+extern crate rocket_include_static_resources;
 
-#[macro_use] extern crate rocket;
-#[macro_use] extern crate serde_derive;
-#[macro_use] extern crate rocket_include_static_resources;
-
-use context::logo_kd::LogoKd;
-use context::logo::Logo;
 use crate::context::Query;
+use context::logo::Logo;
+use context::logo_kd::LogoKd;
 
-mod context;
-mod utils;
-mod db;
-mod models;
-mod hbs;
-mod request_guards;
 mod api;
+mod context;
+mod db;
 mod error_pages;
-
+mod hbs;
+mod models;
+mod request_guards;
+mod utils;
 
 // Make the favicon appear to be served from root
 static_response_handler! {
     "/favicon.ico" => favicon => "favicon",
 }
 
-
 #[get("/")]
 fn index() -> Template {
-    let mut cxt = context::Sorts::new("Rocket")
-        .db(Query::WebsitesWithClicks(None));
+    let mut cxt = context::Sorts::new("Rocket").db(Query::WebsitesWithClicks(None));
 
     cxt.logo = Some(Logo::new().core_href_link("/dashboard"));
     Template::render("index", &cxt)
@@ -57,18 +56,19 @@ fn dashboard() -> Template {
     Template::render("dashboard", &cxt)
 }
 
-
 #[launch]
 fn rocket() -> _ {
+    db::run_migrations();
     rocket::build()
-        .attach(Template::custom(|engines| hbs::register_helpers(&mut engines.handlebars)))
+        .attach(Template::custom(|engines| {
+            hbs::register_helpers(&mut engines.handlebars)
+        }))
         .attach(static_resources_initializer!(
             "favicon" => "static/img/favicon.ico"
         ))
         .mount("/", routes![favicon])
         .mount("/", routes![index, dashboard, website, api::click])
         .register("/", catchers![error_pages::default_catcher])
-
         // Serve the static files
         .mount("/static", FileServer::from("static"))
 }
