@@ -93,7 +93,9 @@ impl Sorts {
                         results.websites_with_clicks = Some(websites);
                         self.db = Some(results);
                     },
-                    Err(_) => panic!("dead")
+                    Err(e) => {
+                        eprintln!("DB ERROR: {}", e);
+                    }
                 }
             },
             Query::ProxyWithClicks(wi) => {
@@ -104,7 +106,9 @@ impl Sorts {
                         results.proxies_with_clicks = Some(proxies);
                         self.db = Some(results);
                     },
-                    Err(_) => panic!("dead")
+                    Err(e) => {
+                        eprintln!("DB ERROR: {}", e);
+                    }
                 }
             },
             Query::ProxyList => {},
